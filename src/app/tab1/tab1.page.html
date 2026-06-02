@@ -1,81 +1,132 @@
 <ion-content [fullscreen]="true">
-  <page-header title="Thermostat">
-    <div headerSubtitle class="custom-status">
-      @if(thermostatOnline) {
-        <span class="status-dot"></span>
-      }
-      <span>{{ thermostatStatusLabel }}</span>
-    </div>
-  </page-header>
-  <div class="thermostat-center">
-    <!-- Température -->
-    <div class="temp-display">
-      <span class="temp-value">{{ temperature | number }}</span>
-      <span class="temp-unit">°C</span>
-    </div>
-    <!-- Pièce -->
-    <div class="room-label">Salon</div>
-    <!-- Contrôle température -->
-    <div class="temp-control">
-      <button class="control-btn" (click)="decrement()" [disabled]="mode !='MANUAL' || commandPending()">−</button>
-      <div class="target-pill">
-        {{ target }}
+  <page-header title="Maison" subtitle="Pilotez votre confort"></page-header>
+
+  <main class="dashboard-shell">
+    <section class="temperature-hero glass-panel" [class.is-heating]="relais">
+      <div class="hero-topline">
+        <div class="room-chip">
+          <ion-icon name="home-outline"></ion-icon>
+          <span>Salon</span>
+        </div>
+
+        <div class="online-chip" [class.is-offline]="!thermostatOnline">
+          <span class="status-dot"></span>
+          <span>{{ thermostatStatusLabel }}</span>
+        </div>
       </div>
-      <button class="control-btn" (click)="increment()" [disabled]="mode !='MANUAL' || commandPending()">+</button>
-    </div>
-    <!-- Statut -->
-    <div class="heating-status">
-      @if (relais) {
-        <span class="flame">🔥</span>
-        <span>Chauffe en cours</span>
-      } @else {
-        <span>Température atteinte</span>
-      }
-    </div>
-  </div>
-  <div class="divider"></div>
-  <div class="thermostat-bottom">
-    <div class="mode-switch" [attr.data-mode]="mode">
-      <div class="mode-thumb"></div>
 
-      <button
-        class="mode-btn"
-        [class.active]="mode === 'AUTO'"
-        type="button"
-        [disabled]="commandPending()"
-        (click)="changeMode('AUTO')">
-        Auto
-      </button>
-
-      <button
-        class="mode-btn"
-        [class.active]="mode === 'MANUAL'"
-        type="button"
-        [disabled]="commandPending()"
-        (click)="changeMode('MANUAL')">
-        Manuel
-      </button>
-
-      <button
-        class="mode-btn"
-        [class.active]="mode === 'OFF'"
-        type="button"
-        [disabled]="commandPending()"
-        (click)="changeMode('OFF')">
-        Off
-      </button>
-    </div>
-
-    @if(mode === 'AUTO') {
-      <div class="next-change">
-        Prochain changement : <strong>{{ (nextSlot | async)?.start }} ➜ {{(nextSlot | async )?.temperature}}°C</strong>
+      <div class="thermostat-ring">
+        <div class="ring-orbit"></div>
+        <div class="temperature-reading">
+          <span class="temperature-value">{{ temperature | number:'1.1-1' }}</span>
+          <span class="temperature-unit">&deg;</span>
+        </div>
+        <div class="temperature-caption">Temp&eacute;rature ambiante</div>
       </div>
+
+      <div class="heating-status" [class.is-idle]="!relais">
+        <ion-icon [name]="relais ? 'flame-outline' : 'checkmark-circle-outline'"></ion-icon>
+        <span>{{ relais ? 'Chauffage en cours' : 'Temp&eacute;rature atteinte' }}</span>
+      </div>
+    </section>
+
+    <section class="setpoint-card glass-panel">
+      <div>
+        <div class="card-eyebrow">Consigne</div>
+        <div class="card-title">Temp&eacute;rature souhait&eacute;e</div>
+      </div>
+
+      <div class="temp-control">
+        <button
+          type="button"
+          class="control-btn"
+          aria-label="Diminuer la consigne"
+          [disabled]="mode !== 'MANUAL' || commandPending()"
+          (click)="decrement()">
+          <ion-icon name="remove-outline"></ion-icon>
+        </button>
+
+        <div class="target-reading">
+          <span>{{ target | number:'1.1-1' }}</span>
+          <small>&deg;C</small>
+        </div>
+
+        <button
+          type="button"
+          class="control-btn"
+          aria-label="Augmenter la consigne"
+          [disabled]="mode !== 'MANUAL' || commandPending()"
+          (click)="increment()">
+          <ion-icon name="add-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="setpoint-help">
+        @if (mode === 'MANUAL') {
+          Ajustez la consigne par pas de 0,5 degr&eacute;.
+        } @else {
+          Passez en mode manuel pour ajuster la consigne.
+        }
+      </div>
+    </section>
+
+    <section class="mode-section">
+      <div class="section-label">Mode de fonctionnement</div>
+
+      <div class="mode-switch glass-panel" [attr.data-mode]="mode">
+        <div class="mode-thumb"></div>
+
+        <button type="button" class="mode-btn" [class.active]="mode === 'AUTO'"
+                [disabled]="commandPending()" (click)="changeMode('AUTO')">
+          <ion-icon name="calendar-clear-outline"></ion-icon>
+          <span>Auto</span>
+        </button>
+
+        <button type="button" class="mode-btn" [class.active]="mode === 'MANUAL'"
+                [disabled]="commandPending()" (click)="changeMode('MANUAL')">
+          <ion-icon name="options-outline"></ion-icon>
+          <span>Manuel</span>
+        </button>
+
+        <button type="button" class="mode-btn" [class.active]="mode === 'OFF'"
+                [disabled]="commandPending()" (click)="changeMode('OFF')">
+          <ion-icon name="power-outline"></ion-icon>
+          <span>Off</span>
+        </button>
+      </div>
+    </section>
+
+    @if (mode === 'AUTO') {
+      <section class="next-change-card glass-panel">
+        <div class="next-change-icon">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="card-eyebrow">Programme automatique</div>
+          <div class="next-change-text">
+            Prochain changement :
+            <strong>{{ (nextSlot | async)?.start || '--:--' }} &middot; {{ (nextSlot | async)?.temperature || '--' }}&deg;C</strong>
+          </div>
+        </div>
+      </section>
     }
-    @if(commandError()) {
-      <div class="next-change">{{ commandError() }}</div>
+
+    <a class="weather-link glass-panel" routerLink="/tabs/tab3">
+      <div class="weather-icon">
+        <ion-icon name="partly-sunny-outline"></ion-icon>
+      </div>
+      <div>
+        <div class="card-eyebrow">Ext&eacute;rieur</div>
+        <div class="card-title">Consulter la m&eacute;t&eacute;o</div>
+      </div>
+      <ion-icon class="weather-chevron" name="chevron-forward-outline"></ion-icon>
+    </a>
+
+    @if (commandError()) {
+      <div class="error-message">{{ commandError() }}</div>
     }
-    @if(statusError()) {
-      <div class="next-change">{{ statusError() }}</div>
+    @if (statusError()) {
+      <div class="error-message">{{ statusError() }}</div>
     }
-  </div>
+  </main>
 </ion-content>

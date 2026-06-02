@@ -3,43 +3,44 @@
 }
 
 .page-header {
-  padding-top: 33px;
-  margin-bottom: 28px;
-  text-align: center;
+  width: min(100%, 464px);
+  box-sizing: border-box;
+  padding: 30px 18px 0;
+  margin: 0 auto 22px;
 }
 
 .page-header-top {
   display: flex;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .page-header-texts {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .page-title {
   margin: 0;
-  font-size: 30px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 750;
   line-height: 1.15;
-  letter-spacing: 0.2px;
-  color: #ffffff;
-  text-align: center;
+  letter-spacing: -0.5px;
+  color: var(--app-text);
 }
 
 .page-subtitle {
-  margin-top: 10px;
+  margin-top: 8px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
 
   font-size: 14px;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.78);
-  text-align: center;
+  color: var(--app-text-soft);
 }
 
 .status-dot {
@@ -53,9 +54,9 @@
 }
 
 .header-divider {
-  margin: 18px auto 0;
+  margin: 16px auto 0;
   height: 1px;
-  width: 82%;
+  width: 100%;
 
   background: linear-gradient(
     90deg,

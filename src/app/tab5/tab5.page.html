@@ -37,8 +37,8 @@
 
       <section class="glass-card consumption-card">
         <div>
-          <div class="chart-title">Consommation estimee</div>
-          <div class="chart-subtitle">Calculee avec le temps de relais actif</div>
+          <div class="chart-title">Consommation estimée</div>
+          <div class="chart-subtitle">Calculée avec le temps de relais actif</div>
         </div>
         <div class="consumption-summary">
           <div><span>Energie</span><strong>{{ energyKwh === null ? '--' : (energyKwh | number:'1.1-2') }} kWh</strong></div>
@@ -46,19 +46,19 @@
         </div>
       </section>
 
-      <div *ngIf="loading" class="glass-card message-card">Chargement des releves...</div>
+      <div *ngIf="loading" class="glass-card message-card">Chargement des relevés...</div>
       <div *ngIf="!loading && errorMessage" class="glass-card message-card">{{ errorMessage }}</div>
       <div *ngIf="!loading && !errorMessage && !hasData" class="glass-card message-card">
-        Pas encore assez de releves pour afficher les courbes.
+        Pas encore assez de relevés pour afficher les courbes.
       </div>
 
       <ng-container *ngIf="!loading && !errorMessage && hasData">
         <ng-container *ngIf="!longPeriod; else aggregateCharts">
         <section class="glass-card chart-card">
           <div class="chart-header">
-            <div><div class="chart-title">Temperature</div><div class="chart-subtitle">Mesure et consigne</div></div>
+            <div><div class="chart-title">Température</div><div class="chart-subtitle">Mesure et consigne</div></div>
             <div class="legend">
-              <span><i class="legend-dot measured"></i>Mesuree</span>
+              <span><i class="legend-dot measured"></i>Mesurée</span>
               <span><i class="legend-dot target"></i>Consigne</span>
             </div>
           </div>
@@ -78,7 +78,7 @@
 
         <section class="glass-card chart-card">
           <div class="chart-header">
-            <div><div class="chart-title">Relais de chauffage</div><div class="chart-subtitle">Periodes de chauffe</div></div>
+            <div><div class="chart-title">Relais de chauffage</div><div class="chart-subtitle">Périodes de chauffe</div></div>
             <div class="relay-rate">{{ relayActivityPercent }} % actif</div>
           </div>
           <div class="relay-layout">
@@ -100,7 +100,7 @@
         <ng-template #aggregateCharts>
           <section class="glass-card chart-card">
             <div class="chart-header">
-              <div><div class="chart-title">Temperature moyenne</div><div class="chart-subtitle">Amplitude min/max par periode</div></div>
+              <div><div class="chart-title">Température moyenne</div><div class="chart-subtitle">Amplitude min/max par période</div></div>
             </div>
             <div class="chart-layout">
               <div class="y-axis"><span *ngFor="let tick of temperatureTicks">{{ tick.label }}</span></div>
@@ -123,7 +123,7 @@
 
           <section class="glass-card chart-card">
             <div class="chart-header">
-              <div><div class="chart-title">Activite du chauffage</div><div class="chart-subtitle">Pourcentage actif par periode</div></div>
+              <div><div class="chart-title">Activité du chauffage</div><div class="chart-subtitle">Pourcentage actif par période</div></div>
               <div class="relay-rate">{{ relayActivityPercent }} % actif</div>
             </div>
             <div class="relay-layout">

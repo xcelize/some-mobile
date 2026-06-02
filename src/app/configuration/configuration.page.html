@@ -8,7 +8,7 @@
 
         <h1>{{ linkRequired ? 'Associer le thermostat' : 'Connexion' }}</h1>
         <p>
-          {{ linkRequired ? 'Renseignez l identifiant du thermostat a associer a votre compte.' : 'Connectez-vous avec votre compte pour recuperer automatiquement votre thermostat.' }}
+          {{ linkRequired ? 'Renseignez l’identifiant du thermostat à associer à votre compte.' : 'Connectez-vous avec votre compte pour récupérer automatiquement votre thermostat.' }}
         </p>
       </div>
 
@@ -21,7 +21,7 @@
           <div class="card-status__content">
             <div class="card-status__title">{{ linkRequired ? 'Thermostat requis' : 'Compte requis' }}</div>
             <div class="card-status__subtitle">
-              {{ linkRequired ? 'Cette association ne sera faite qu une seule fois.' : 'Votre session sera conservee sur ce telephone.' }}
+              {{ linkRequired ? 'Cette association ne sera faite qu’une seule fois.' : 'Votre session sera conservée sur ce téléphone.' }}
             </div>
           </div>
         </div>
@@ -71,7 +71,7 @@
               [(ngModel)]="thermostatId">
             </ion-input>
             <div class="form-hint">
-              Utilisez l identifiant fourni lors de l enrolement du thermostat.
+              Utilisez l’identifiant fourni lors de l’enrôlement du thermostat.
             </div>
           </div>
         </ng-template>
@@ -95,7 +95,7 @@
 
         <div class="auth-switch" *ngIf="!linkRequired">
           Pas encore de compte ?
-          <a routerLink="/register">Creer un compte</a>
+          <a routerLink="/register">Créer un compte</a>
         </div>
       </div>
     </div>

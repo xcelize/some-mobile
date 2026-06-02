@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {IonContent, IonIcon} from '@ionic/angular/standalone';
@@ -7,6 +7,9 @@ import {addIcons} from "ionicons";
 import {PageHeaderComponent} from "../page-header/page-header.component";
 import {ThermostatService} from "../core/service/thermostat-service";
 import {TelemetryService} from "../core/service/telemetry.service";
+import {AuthService} from '../core/service/auth.service';
+import {DeviceService} from '../core/service/device.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-tab4',
@@ -17,6 +20,12 @@ import {TelemetryService} from "../core/service/telemetry.service";
 })
 export class Tab4Page implements OnInit {
 
+  private readonly thermostatService = inject(ThermostatService);
+  private readonly telemetryService = inject(TelemetryService);
+  private readonly authService = inject(AuthService);
+  private readonly deviceService = inject(DeviceService);
+  private readonly router = inject(Router);
+
   temperatureOffset = 0.5;
   commandPending = this.thermostatService.commandPending;
   commandError = this.thermostatService.commandError;
@@ -24,6 +33,7 @@ export class Tab4Page implements OnInit {
   loadingPower = false;
   savingPower = false;
   powerMessage = '';
+  logoutInProgress = false;
 
   private readonly minOffset = -5;
   private readonly maxOffset = 5;
@@ -31,10 +41,7 @@ export class Tab4Page implements OnInit {
 
 
 
-  constructor(
-    private readonly thermostatService: ThermostatService,
-    private readonly telemetryService: TelemetryService
-  ) {
+  constructor() {
     addIcons({
       addOutline,
       removeOutline,
@@ -95,6 +102,18 @@ export class Tab4Page implements OnInit {
         this.powerMessage = 'Impossible d enregistrer la puissance.';
       },
     });
+  }
+
+  async logout(): Promise<void> {
+    if (this.logoutInProgress) {
+      return;
+    }
+
+    this.logoutInProgress = true;
+    this.thermostatService.reset();
+    await this.authService.clearSession();
+    await this.deviceService.clearSetupConfiguration();
+    await this.router.navigate(['/setup'], {replaceUrl: true});
   }
 
   private loadElectricalPower(): void {

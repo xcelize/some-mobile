@@ -92,6 +92,34 @@ export class ThermostatService {
     this.refreshSchedule().subscribe();
   }
 
+  reset(): void {
+    this.initialized = false;
+    this.deviceId = null;
+    this.deviceUuid = null;
+    this.deviceStateRevision++;
+    this.scheduleRevision++;
+    this.statusRequestSequence++;
+    this.scheduleRequestSequence++;
+    this.clearPendingCommand();
+    this.terminalCommandRequestIds.clear();
+    this.webSocketConnectionSub?.unsubscribe();
+    this.deviceStateWebSocketSub?.unsubscribe();
+    this.planningWebSocketSub?.unsubscribe();
+    this.commandNotificationSub?.unsubscribe();
+    this.webSocketConnectionSub = undefined;
+    this.deviceStateWebSocketSub = undefined;
+    this.planningWebSocketSub = undefined;
+    this.commandNotificationSub = undefined;
+    this.deviceStateSubject.next(null);
+    this.planningSubject.next(null);
+    this.lastCommandResult.set(null);
+    this.lastCommandNotification.set(null);
+    this.commandError.set(null);
+    this.statusLoading.set(false);
+    this.statusError.set(null);
+    this.webSocketCommandGateway.disconnect();
+  }
+
   getNextSlot() {
     return this.planning$.pipe(
       filter((planning): planning is EspPlanning => planning !== null),

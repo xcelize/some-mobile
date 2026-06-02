@@ -8,7 +8,7 @@
 
         <h1>Inscription</h1>
         <p>
-          Creez votre compte pour associer votre thermostat et retrouver vos reglages sur ce telephone.
+          Créez votre compte pour associer votre thermostat et retrouver vos réglages sur ce téléphone.
         </p>
       </div>
 
@@ -21,7 +21,7 @@
           <div class="card-status__content">
             <div class="card-status__title">Nouveau compte</div>
             <div class="card-status__subtitle">
-              Vous associerez votre thermostat juste apres la creation du compte.
+              Vous associerez votre thermostat juste après la création du compte.
             </div>
           </div>
         </div>
@@ -44,11 +44,11 @@
             fill="outline"
             mode="md"
             [type]="showPassword ? 'text' : 'password'"
-            placeholder="8 caracteres minimum"
+            placeholder="8 caractères minimum"
             autocomplete="new-password"
             [(ngModel)]="password">
           </ion-input>
-          <div class="form-hint">Utilisez au moins 8 caracteres.</div>
+          <div class="form-hint">Utilisez au moins 8 caractères.</div>
         </div>
 
         <div class="form-group">
@@ -57,7 +57,7 @@
             fill="outline"
             mode="md"
             [type]="showPassword ? 'text' : 'password'"
-            placeholder="Saisissez a nouveau votre mot de passe"
+            placeholder="Saisissez à nouveau votre mot de passe"
             autocomplete="new-password"
             [(ngModel)]="passwordConfirmation">
           </ion-input>
@@ -85,11 +85,11 @@
           (click)="register()">
           <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
           <ion-icon *ngIf="!loading" name="person-add-outline"></ion-icon>
-          <span>{{ loading ? 'Veuillez patienter...' : 'Creer mon compte' }}</span>
+          <span>{{ loading ? 'Veuillez patienter...' : 'Créer mon compte' }}</span>
         </ion-button>
 
         <div class="auth-switch">
-          Deja un compte ?
+          Déjà un compte ?
           <a routerLink="/setup">Se connecter</a>
         </div>
       </div>

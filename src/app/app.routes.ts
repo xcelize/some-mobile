@@ -18,8 +18,4 @@ export const routes: Routes = [
     loadComponent: () => import('./register/register.page').then(m => m.RegisterPage),
     canActivate: [publicOnlyGuard]
   },
-  {
-    path: 'tab4',
-    loadComponent: () => import('./tab4/tab4.page').then( m => m.Tab4Page)
-  },
 ];

@@ -118,6 +118,25 @@ describe('ThermostatService', () => {
     expect(http.get).toHaveBeenCalledTimes(2);
   }));
 
+  it('clears the current device state and disconnects the WebSocket when reset', () => {
+    const webSocketGateway = {disconnect: jasmine.createSpy('disconnect')};
+    service = new ThermostatService(
+      {} as never,
+      webSocketGateway as never,
+      {} as never,
+      {} as never
+    );
+    (service as unknown as {initialized: boolean}).initialized = true;
+    (service as unknown as {deviceUuid: string}).deviceUuid = 'device-uuid';
+    applyWebSocketStatus({temperature: 22});
+
+    service.reset();
+
+    expect((service as unknown as {initialized: boolean}).initialized).toBeFalse();
+    expect((service as unknown as {deviceUuid: string | null}).deviceUuid).toBeNull();
+    expect(webSocketGateway.disconnect).toHaveBeenCalled();
+  });
+
   function mapStatus(overrides: Partial<DeviceStatusResponse> = {}) {
     return (service as unknown as {
       mapStatusResponse(status: DeviceStatusResponse): DeviceStatusResponse

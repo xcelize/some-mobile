@@ -88,14 +88,26 @@ export class WebSocketCommandGateway {
   }
 
   disconnect(): void {
+    this.initialized = false;
+
     if (this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout);
       this.reconnectTimeout = undefined;
     }
 
-    this.socket?.close();
+    const socket = this.socket;
     this.socket = undefined;
+    if (socket) {
+      socket.onopen = null;
+      socket.onmessage = null;
+      socket.onclose = null;
+      socket.onerror = null;
+      socket.close();
+    }
+
     this.connected = false;
+    this.pendingFrames.length = 0;
+    this.requestedSubscriptions.clear();
     this.sentSubscriptions.clear();
     this.connectionStateSubject.next(false);
   }
@@ -189,7 +201,7 @@ export class WebSocketCommandGateway {
   }
 
   private scheduleReconnect(): void {
-    if (this.reconnectTimeout) {
+    if (!this.initialized || this.reconnectTimeout) {
       return;
     }
 

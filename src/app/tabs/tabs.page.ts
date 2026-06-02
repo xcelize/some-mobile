@@ -1,7 +1,7 @@
 import { Component, EnvironmentInjector, inject } from '@angular/core';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { thermometerOutline, calendarClearOutline, settingsOutline, sunnyOutline, statsChartOutline} from 'ionicons/icons';
+import { calendarClearOutline, homeOutline, settingsOutline, statsChartOutline} from 'ionicons/icons';
 import {CommonModule} from "@angular/common";
 
 @Component({
@@ -14,6 +14,6 @@ export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
 
   constructor() {
-    addIcons({ thermometerOutline, calendarClearOutline, settingsOutline, sunnyOutline, statsChartOutline });
+    addIcons({ calendarClearOutline, homeOutline, settingsOutline, statsChartOutline });
   }
 }

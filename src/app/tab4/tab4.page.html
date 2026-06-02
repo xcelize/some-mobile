@@ -41,12 +41,12 @@
 
       <div class="glass-card power-card">
         <div class="calibration-card__header">
-          Pompe a chaleur
+          Pompe à chaleur
         </div>
 
         <div class="calibration-card__body">
           <div class="power-title">
-            Puissance electrique absorbee
+            Puissance électrique absorbée
           </div>
 
           <div class="power-input-row">
@@ -60,8 +60,28 @@
           </div>
 
           <div class="power-help">
-            {{ powerMessage || 'Renseignez la puissance electrique absorbee, pas la puissance thermique restituee.' }}
+            {{ powerMessage || 'Renseignez la puissance électrique absorbée, pas la puissance thermique restituée.' }}
           </div>
+        </div>
+      </div>
+
+      <div class="section-header account-header">
+        <span>Compte</span>
+      </div>
+
+      <div class="glass-card account-card">
+        <div class="calibration-card__body">
+          <div class="power-title">
+            Session utilisateur
+          </div>
+
+          <div class="account-help">
+            La déconnexion supprime la session enregistrée sur ce téléphone.
+          </div>
+
+          <button type="button" class="logout-btn" [disabled]="logoutInProgress" (click)="logout()">
+            {{ logoutInProgress ? 'Déconnexion...' : 'Se déconnecter' }}
+          </button>
         </div>
       </div>
     </div>
