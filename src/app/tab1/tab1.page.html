@@ -1,0 +1,81 @@
+<ion-content [fullscreen]="true">
+  <page-header title="Thermostat">
+    <div headerSubtitle class="custom-status">
+      @if(thermostatOnline) {
+        <span class="status-dot"></span>
+      }
+      <span>{{ thermostatStatusLabel }}</span>
+    </div>
+  </page-header>
+  <div class="thermostat-center">
+    <!-- Température -->
+    <div class="temp-display">
+      <span class="temp-value">{{ temperature | number }}</span>
+      <span class="temp-unit">°C</span>
+    </div>
+    <!-- Pièce -->
+    <div class="room-label">Salon</div>
+    <!-- Contrôle température -->
+    <div class="temp-control">
+      <button class="control-btn" (click)="decrement()" [disabled]="mode !='MANUAL' || commandPending()">−</button>
+      <div class="target-pill">
+        {{ target }}
+      </div>
+      <button class="control-btn" (click)="increment()" [disabled]="mode !='MANUAL' || commandPending()">+</button>
+    </div>
+    <!-- Statut -->
+    <div class="heating-status">
+      @if (relais) {
+        <span class="flame">🔥</span>
+        <span>Chauffe en cours</span>
+      } @else {
+        <span>Température atteinte</span>
+      }
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="thermostat-bottom">
+    <div class="mode-switch" [attr.data-mode]="mode">
+      <div class="mode-thumb"></div>
+
+      <button
+        class="mode-btn"
+        [class.active]="mode === 'AUTO'"
+        type="button"
+        [disabled]="commandPending()"
+        (click)="changeMode('AUTO')">
+        Auto
+      </button>
+
+      <button
+        class="mode-btn"
+        [class.active]="mode === 'MANUAL'"
+        type="button"
+        [disabled]="commandPending()"
+        (click)="changeMode('MANUAL')">
+        Manuel
+      </button>
+
+      <button
+        class="mode-btn"
+        [class.active]="mode === 'OFF'"
+        type="button"
+        [disabled]="commandPending()"
+        (click)="changeMode('OFF')">
+        Off
+      </button>
+    </div>
+
+    @if(mode === 'AUTO') {
+      <div class="next-change">
+        Prochain changement : <strong>{{ (nextSlot | async)?.start }} ➜ {{(nextSlot | async )?.temperature}}°C</strong>
+      </div>
+    }
+    @if(commandError()) {
+      <div class="next-change">{{ commandError() }}</div>
+    }
+    @if(statusError()) {
+      <div class="next-change">{{ statusError() }}</div>
+    }
+  </div>
+</ion-content>

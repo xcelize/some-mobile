@@ -1,0 +1,98 @@
+<ion-content [fullscreen]="true">
+  <div class="setup-page">
+    <div class="setup-shell">
+      <div class="setup-header">
+        <div class="setup-badge">
+          <ion-icon name="hardware-chip-outline"></ion-icon>
+        </div>
+
+        <h1>Inscription</h1>
+        <p>
+          Creez votre compte pour associer votre thermostat et retrouver vos reglages sur ce telephone.
+        </p>
+      </div>
+
+      <div class="glass-card setup-card">
+        <div class="card-status">
+          <div class="card-status__icon">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+          </div>
+
+          <div class="card-status__content">
+            <div class="card-status__title">Nouveau compte</div>
+            <div class="card-status__subtitle">
+              Vous associerez votre thermostat juste apres la creation du compte.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <ion-input
+            fill="outline"
+            mode="md"
+            type="email"
+            placeholder="vous@exemple.fr"
+            autocomplete="email"
+            [(ngModel)]="email">
+          </ion-input>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <ion-input
+            fill="outline"
+            mode="md"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="8 caracteres minimum"
+            autocomplete="new-password"
+            [(ngModel)]="password">
+          </ion-input>
+          <div class="form-hint">Utilisez au moins 8 caracteres.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirmer le mot de passe</label>
+          <ion-input
+            fill="outline"
+            mode="md"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Saisissez a nouveau votre mot de passe"
+            autocomplete="new-password"
+            [(ngModel)]="passwordConfirmation">
+          </ion-input>
+
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="showPassword = !showPassword">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            {{ showPassword ? 'Masquer' : 'Afficher' }}
+          </button>
+        </div>
+
+        <div class="preview-box" *ngIf="errorMessage">
+          <div class="preview-row">
+            <span>{{ errorMessage }}</span>
+          </div>
+        </div>
+
+        <ion-button
+          expand="block"
+          size="large"
+          class="save-btn"
+          [disabled]="!email.trim() || !password || !passwordConfirmation || loading"
+          (click)="register()">
+          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+          <ion-icon *ngIf="!loading" name="person-add-outline"></ion-icon>
+          <span>{{ loading ? 'Veuillez patienter...' : 'Creer mon compte' }}</span>
+        </ion-button>
+
+        <div class="auth-switch">
+          Deja un compte ?
+          <a routerLink="/setup">Se connecter</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

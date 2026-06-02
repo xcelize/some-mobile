@@ -1,0 +1,48 @@
+<ion-content [fullscreen]="true">
+  <page-header
+    [title]="pageTitle"
+    [subtitle]="dayLabel">
+  </page-header>
+
+  <div class="slot-form-page">
+    <div class="page-shell">
+      <div class="glass-card form-card">
+        <div class="form-group">
+          <label class="form-label">Heure de début</label>
+          <ion-input
+            type="time"
+            fill="outline"
+            [(ngModel)]="slotForm.start">
+          </ion-input>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Température</label>
+          <ion-input
+            type="number"
+            inputmode="decimal"
+            fill="outline"
+            [(ngModel)]="slotForm.temperature">
+          </ion-input>
+        </div>
+
+        <div class="preview-card">
+          <div class="preview-label">Aperçu</div>
+          <div class="preview-value">
+            {{ formatHour(slotForm.start) }} • {{ slotForm.temperature || 0 }}°C
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <ion-button expand="block" (click)="cancel()">
+            Annuler
+          </ion-button>
+
+          <ion-button expand="block" (click)="save()">
+            {{ mode === 'create' ? 'Ajouter' : 'Enregistrer' }}
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,268 @@
+:host ::ng-deep .status-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
+  background: #74dd8a;
+  box-shadow: 0 0 10px rgba(116, 221, 138, 0.45);
+}
+
+.custom-status {
+  color: #ffffff;
+}
+
+.thermostat-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-top: 40px;
+}
+
+/* 🌡️ Température principale */
+.temp-display {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.temp-value {
+  font-size: 80px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1;
+
+  text-shadow:
+    0 0 30px rgba(120, 170, 255, 0.5),
+    0 0 60px rgba(120, 170, 255, 0.2);
+}
+
+.temp-unit {
+  font-size: 28px;
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 🏠 Label */
+.room-label {
+  margin-top: 8px;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* 🎛️ Slider container */
+.temp-control {
+  margin-top: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 80%;
+  max-width: 320px;
+
+  padding: 6px;
+
+  border-radius: 40px;
+
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* boutons + / - */
+.control-btn {
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  background: transparent;
+
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 26px;
+
+  cursor: pointer;
+}
+
+/* 🎯 pill central */
+.target-pill {
+  padding: 12px 50px;
+
+  border-radius: 999px;
+
+  background: linear-gradient(
+    180deg,
+    #3b82f6,
+    #2563eb
+  );
+
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+
+  box-shadow:
+    0 10px 25px rgba(59, 130, 246, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* 🔥 statut */
+.heating-status {
+  margin-top: 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 16px;
+  color: #ffb347;
+
+  text-shadow: 0 0 10px rgba(255, 180, 70, 0.5);
+}
+
+.flame {
+  font-size: 22px;
+}
+
+.divider {
+  margin: 18px auto 0;
+  height: 1px;
+  width: 82%;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.16) 20%,
+    rgba(255, 255, 255, 0.16) 80%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+}
+
+.thermostat-bottom {
+  margin-top: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mode-switch {
+  position: relative;
+  width: 86%;
+  max-width: 640px;
+  min-height: 70px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+
+  padding: 4px;
+  border-radius: 999px;
+  overflow: hidden;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 10px 30px rgba(0, 0, 0, 0.12);
+
+  backdrop-filter: blur(12px);
+}
+
+/* fond actif qui glisse */
+.mode-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+
+  width: calc((100% - 8px) / 3);
+
+  background: linear-gradient(
+    180deg,
+    #3f8cff 0%,
+    #2c6ef2 100%
+  );
+
+  box-shadow:
+    0 8px 24px rgba(52, 120, 255, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  transition: transform 0.28s ease;
+  z-index: 1;
+}
+
+/* position du thumb */
+.mode-switch[data-mode='AUTO'] .mode-thumb {
+  transform: translateX(0%);
+  border-top-left-radius: 999px;
+  border-bottom-left-radius: 999px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.mode-switch[data-mode='MANUAL'] .mode-thumb {
+  transform: translateX(100%);
+  border-radius: 0;
+}
+
+.mode-switch[data-mode='OFF'] .mode-thumb {
+  transform: translateX(200%);
+  border-top-right-radius: 999px;
+  border-bottom-right-radius: 999px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.mode-btn {
+  position: relative;
+  z-index: 2;
+
+  height: 60px;
+  border: 0;
+  background: transparent;
+
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.mode-btn:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 18px;
+
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.mode-btn.active {
+  color: #ffffff;
+}
+
+.mode-btn.active::after {
+  opacity: 0;
+}
+
+.next-change {
+  margin-top: 28px;
+  font-size: 18px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.72);
+  text-align: center;
+}
+
+.next-change strong {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}

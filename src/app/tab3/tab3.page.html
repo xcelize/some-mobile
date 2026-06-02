@@ -1,0 +1,93 @@
+<ion-content [fullscreen]="true">
+  <page-header
+    [title]="'Météo'"
+    [subtitle]="'Température extérieure du jour'">
+  </page-header>
+
+  <div class="weather-page">
+    <div class="page-shell">
+      <div *ngIf="loading" class="glass-card hero-card">
+        <div class="hero-card__location">Chargement de la météo...</div>
+      </div>
+
+      <ng-container *ngIf="!loading && weather as w">
+        <div class="glass-card hero-card">
+          <div class="hero-card__top">
+            <div>
+              <div class="hero-card__location">{{ w.city }}</div>
+              <div class="hero-card__date">{{ w.todayLabel }}</div>
+            </div>
+          </div>
+
+          <div class="hero-card__main">
+            <div class="hero-card__temp-block">
+              <div class="hero-card__temp">{{ w.currentTemp }}°</div>
+              <div class="hero-card__status">{{ w.currentLabel }}</div>
+            </div>
+
+            <div class="hero-card__icon">
+              <ion-icon [name]="w.currentIcon"></ion-icon>
+            </div>
+          </div>
+
+          <div class="hero-card__footer">
+            Ressenti {{ w.feelsLike }}° &nbsp;|&nbsp; Max: {{ w.tempMax }}° &nbsp; Min: {{ w.tempMin }}°
+          </div>
+        </div>
+
+        <div class="section-title">Prévisions horaires</div>
+
+        <div class="glass-card hourly-card">
+          <div class="hourly-list">
+            <div class="hourly-item" *ngFor="let item of w.hourlyForecast">
+              <div class="hourly-item__time">{{ item.time }}</div>
+              <ion-icon class="hourly-item__icon" [name]="item.icon"></ion-icon>
+              <div class="hourly-item__temp">{{ item.temp }}°</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Prévisions du jour</div>
+
+        <div class="daily-grid">
+          <div class="glass-card daily-card" *ngFor="let item of w.dayPeriods">
+            <div class="daily-card__title">{{ item.label }}</div>
+            <ion-icon class="daily-card__icon" [name]="item.icon"></ion-icon>
+            <div class="daily-card__temp">{{ item.temp }}°</div>
+            <div class="daily-card__subtitle">{{ item.status }}</div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="glass-card stat-card">
+            <ion-icon name="leaf-outline"></ion-icon>
+            <div>
+              <div class="stat-card__label">Vent</div>
+              <div class="stat-card__value">{{ w.windSpeed }} km/h</div>
+            </div>
+          </div>
+
+          <div class="glass-card stat-card">
+            <ion-icon name="water-outline"></ion-icon>
+            <div>
+              <div class="stat-card__label">Humidité</div>
+              <div class="stat-card__value">{{ w.humidity }}%</div>
+            </div>
+          </div>
+
+          <div class="glass-card stat-card">
+            <ion-icon name="speedometer-outline"></ion-icon>
+            <div>
+              <div class="stat-card__label">Pression</div>
+              <div class="stat-card__value">{{ w.pressure }} hPa</div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <div *ngIf="!loading && !weather" class="glass-card hero-card">
+        <div class="hero-card__location">Impossible de charger la météo.</div>
+      </div>
+    </div>
+  </div>
+</ion-content>

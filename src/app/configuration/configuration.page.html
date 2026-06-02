@@ -1,0 +1,103 @@
+<ion-content [fullscreen]="true">
+  <div class="setup-page">
+    <div class="setup-shell">
+      <div class="setup-header">
+        <div class="setup-badge">
+          <ion-icon name="hardware-chip-outline"></ion-icon>
+        </div>
+
+        <h1>{{ linkRequired ? 'Associer le thermostat' : 'Connexion' }}</h1>
+        <p>
+          {{ linkRequired ? 'Renseignez l identifiant du thermostat a associer a votre compte.' : 'Connectez-vous avec votre compte pour recuperer automatiquement votre thermostat.' }}
+        </p>
+      </div>
+
+      <div class="glass-card setup-card">
+        <div class="card-status">
+          <div class="card-status__icon">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+          </div>
+
+          <div class="card-status__content">
+            <div class="card-status__title">{{ linkRequired ? 'Thermostat requis' : 'Compte requis' }}</div>
+            <div class="card-status__subtitle">
+              {{ linkRequired ? 'Cette association ne sera faite qu une seule fois.' : 'Votre session sera conservee sur ce telephone.' }}
+            </div>
+          </div>
+        </div>
+
+        <ng-container *ngIf="!linkRequired; else linkDeviceForm">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <ion-input
+            fill="outline"
+            mode="md"
+            type="email"
+            placeholder="vous@exemple.fr"
+            autocomplete="email"
+            [(ngModel)]="email">
+          </ion-input>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mot de passe</label>
+          <ion-input
+            fill="outline"
+            mode="md"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Saisissez votre mot de passe"
+            autocomplete="current-password"
+            [(ngModel)]="password">
+          </ion-input>
+
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="showPassword = !showPassword">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            {{ showPassword ? 'Masquer' : 'Afficher' }}
+          </button>
+        </div>
+        </ng-container>
+
+        <ng-template #linkDeviceForm>
+          <div class="form-group">
+            <label class="form-label">ID du thermostat</label>
+            <ion-input
+              fill="outline"
+              mode="md"
+              placeholder="Ex. thermostat-salon"
+              autocomplete="off"
+              [(ngModel)]="thermostatId">
+            </ion-input>
+            <div class="form-hint">
+              Utilisez l identifiant fourni lors de l enrolement du thermostat.
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="preview-box" *ngIf="errorMessage">
+          <div class="preview-row">
+            <span>{{ errorMessage }}</span>
+          </div>
+        </div>
+
+        <ion-button
+          expand="block"
+          size="large"
+          class="save-btn"
+          [disabled]="linkRequired ? (!thermostatId || loading) : (!email || !password || loading)"
+          (click)="linkRequired ? linkDevice() : saveConfiguration()">
+          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+          <ion-icon *ngIf="!loading" name="log-in-outline"></ion-icon>
+          <span>{{ loading ? 'Veuillez patienter...' : (linkRequired ? 'Associer' : 'Se connecter') }}</span>
+        </ion-button>
+
+        <div class="auth-switch" *ngIf="!linkRequired">
+          Pas encore de compte ?
+          <a routerLink="/register">Creer un compte</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,69 @@
+<ion-content [fullscreen]="true">
+  <page-header
+    [title]="'Paramètres'">
+  </page-header>
+
+  <div class="settings-page">
+    <div class="page-shell">
+      <div class="section-header">
+        <span>Thermostat</span>
+      </div>
+
+      <div class="glass-card calibration-card">
+        <div class="calibration-card__header">
+          Calibration
+        </div>
+
+        <div class="calibration-card__body">
+          <div class="calibration-title">
+            Correction de température
+          </div>
+
+          <div class="offset-controls">
+            <button type="button" class="offset-btn" [disabled]="commandPending()" (click)="decreaseOffset()">
+              <ion-icon name="remove-outline"></ion-icon>
+            </button>
+
+            <div class="offset-value-inline">
+              {{ formatOffset(temperatureOffset) }}
+            </div>
+
+            <button type="button" class="offset-btn" [disabled]="commandPending()" (click)="increaseOffset()">
+              <ion-icon name="add-outline"></ion-icon>
+            </button>
+          </div>
+
+          <div class="calibration-help">
+            {{ commandError() || 'Utilisez cette valeur si la température mesurée diffère de votre thermomètre de référence.' }}
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card power-card">
+        <div class="calibration-card__header">
+          Pompe a chaleur
+        </div>
+
+        <div class="calibration-card__body">
+          <div class="power-title">
+            Puissance electrique absorbee
+          </div>
+
+          <div class="power-input-row">
+            <input id="electrical-power" type="number" inputmode="decimal" min="0.1" max="100" step="0.1"
+                   [(ngModel)]="powerInputKw" placeholder="Ex. 2.5">
+            <span>kW</span>
+            <button type="button" [disabled]="loadingPower || !powerIsValid || savingPower"
+                    (click)="saveElectricalPower()">
+              {{ savingPower ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+          </div>
+
+          <div class="power-help">
+            {{ powerMessage || 'Renseignez la puissance electrique absorbee, pas la puissance thermique restituee.' }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

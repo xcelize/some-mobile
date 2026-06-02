@@ -1,0 +1,185 @@
+.settings-page {
+  padding: 12px 0 110px;
+}
+
+.page-shell {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.section-header {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  span {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #7fb2ff;
+  }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.calibration-card {
+  overflow: hidden;
+}
+
+.power-card {
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.calibration-card__header {
+  padding: 18px 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.calibration-card__body {
+  padding: 22px 20px 20px;
+}
+
+.calibration-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+}
+
+.calibration-subtitle {
+  margin: 12px auto 0;
+  max-width: 290px;
+  text-align: center;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.offset-value {
+  margin-top: 38px;
+  text-align: center;
+  font-size: 4rem;
+  line-height: 1;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+}
+
+.offset-controls {
+  margin: 34px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.offset-btn {
+  width: 64px;
+  height: 56px;
+  border: none;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  ion-icon {
+    font-size: 1.8rem;
+  }
+}
+
+.offset-value-inline {
+  flex: 1;
+  text-align: center;
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.calibration-help {
+  margin-top: 34px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.76);
+  text-align: center;
+}
+
+.power-title {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.power-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  color: rgba(255, 255, 255, 0.84);
+
+  input {
+    min-width: 0;
+    flex: 1;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    color: #284b6d;
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  button {
+    padding: 10px;
+    border: 0;
+    border-radius: 10px;
+    color: #fff;
+    background: #ef7857;
+  }
+}
+
+.power-help {
+  margin-top: 14px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 390px) {
+  .page-shell {
+    padding: 0 12px;
+  }
+
+  .offset-value {
+    font-size: 3.2rem;
+  }
+
+  .offset-controls {
+    grid-template-columns: 78px 1fr 78px;
+    gap: 10px;
+  }
+
+  .offset-btn,
+  .offset-track {
+    height: 50px;
+  }
+}

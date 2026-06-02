@@ -1,0 +1,23 @@
+<div class="page-header">
+  <div class="page-header-top">
+    <div class="page-header-texts">
+      <h1 class="page-title">{{ title }}</h1>
+
+      <ng-container *ngIf="hasProjectedSubtitle; else defaultSubtitle">
+        <ng-content select="[headerSubtitle]"></ng-content>
+      </ng-container>
+
+      <ng-template #defaultSubtitle>
+        <div class="page-subtitle" *ngIf="subtitle">
+          {{ subtitle }}
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="page-header-actions" *ngIf="hasProjectedActions">
+      <ng-content select="[headerActions]"></ng-content>
+    </div>
+  </div>
+
+  <div class="header-divider"></div>
+</div>

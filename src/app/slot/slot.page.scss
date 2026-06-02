@@ -1,0 +1,71 @@
+.slot-form-page {
+  padding: 12px 0 40px;
+}
+
+.page-shell {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.form-card {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+ion-input {
+  --background: rgba(255, 255, 255, 0.04);
+  --border-radius: 16px;
+  --color: #fff;
+}
+
+.preview-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.preview-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 6px;
+}
+
+.preview-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+ion-input {
+  --padding-start: 16px;
+}

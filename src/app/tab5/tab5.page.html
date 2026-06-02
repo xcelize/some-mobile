@@ -1,0 +1,145 @@
+<ion-content [fullscreen]="true">
+  <page-header [title]="'Historique'" [subtitle]="'Fluctuations du thermostat'"></page-header>
+
+  <div class="history-page">
+    <div class="page-shell">
+      <div class="toolbar">
+        <div class="period-switch">
+          <button *ngFor="let period of periods" type="button"
+                  [class.active]="selectedHours === period.hours"
+                  (click)="selectPeriod(period.hours)">
+            {{ period.label }}
+          </button>
+        </div>
+        <button type="button" class="refresh-button" [disabled]="loading" (click)="loadTelemetry()">
+          <ion-icon name="refresh-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="glass-card stat-card">
+          <ion-icon name="thermometer-outline"></ion-icon>
+          <div><div class="stat-label">Actuelle</div><div class="stat-value">{{ currentTemperature === null ? '--' : (currentTemperature | number:'1.1-1') }} C</div></div>
+        </div>
+        <div class="glass-card stat-card">
+          <div class="stat-symbol">min</div>
+          <div><div class="stat-label">Minimum</div><div class="stat-value">{{ minimumTemperature === null ? '--' : (minimumTemperature | number:'1.1-1') }} C</div></div>
+        </div>
+        <div class="glass-card stat-card">
+          <div class="stat-symbol">max</div>
+          <div><div class="stat-label">Maximum</div><div class="stat-value">{{ maximumTemperature === null ? '--' : (maximumTemperature | number:'1.1-1') }} C</div></div>
+        </div>
+        <div class="glass-card stat-card">
+          <ion-icon name="flame-outline"></ion-icon>
+          <div><div class="stat-label">Chauffage actif</div><div class="stat-value">{{ relayActivityPercent }} %</div></div>
+        </div>
+      </div>
+
+      <section class="glass-card consumption-card">
+        <div>
+          <div class="chart-title">Consommation estimee</div>
+          <div class="chart-subtitle">Calculee avec le temps de relais actif</div>
+        </div>
+        <div class="consumption-summary">
+          <div><span>Energie</span><strong>{{ energyKwh === null ? '--' : (energyKwh | number:'1.1-2') }} kWh</strong></div>
+          <div><span>Temps de chauffe</span><strong>{{ relayOnHours | number:'1.1-2' }} h</strong></div>
+        </div>
+      </section>
+
+      <div *ngIf="loading" class="glass-card message-card">Chargement des releves...</div>
+      <div *ngIf="!loading && errorMessage" class="glass-card message-card">{{ errorMessage }}</div>
+      <div *ngIf="!loading && !errorMessage && !hasData" class="glass-card message-card">
+        Pas encore assez de releves pour afficher les courbes.
+      </div>
+
+      <ng-container *ngIf="!loading && !errorMessage && hasData">
+        <ng-container *ngIf="!longPeriod; else aggregateCharts">
+        <section class="glass-card chart-card">
+          <div class="chart-header">
+            <div><div class="chart-title">Temperature</div><div class="chart-subtitle">Mesure et consigne</div></div>
+            <div class="legend">
+              <span><i class="legend-dot measured"></i>Mesuree</span>
+              <span><i class="legend-dot target"></i>Consigne</span>
+            </div>
+          </div>
+          <div class="chart-layout">
+            <div class="y-axis"><span *ngFor="let tick of temperatureTicks">{{ tick.label }}</span></div>
+            <div class="svg-wrapper">
+              <svg class="temperature-chart" [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" preserveAspectRatio="none">
+                <line *ngFor="let tick of temperatureTicks" class="grid-line" x1="0" [attr.y1]="tick.position" [attr.x2]="chartWidth" [attr.y2]="tick.position"></line>
+                <line *ngFor="let tick of timeTicks" class="grid-line time-grid-line" [attr.x1]="tick.position" y1="0" [attr.x2]="tick.position" [attr.y2]="chartHeight"></line>
+                <polyline class="target-line" [attr.points]="targetPolyline"></polyline>
+                <polyline class="temperature-line" [attr.points]="temperaturePolyline"></polyline>
+              </svg>
+              <div class="x-axis"><span *ngFor="let tick of timeTicks" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass-card chart-card">
+          <div class="chart-header">
+            <div><div class="chart-title">Relais de chauffage</div><div class="chart-subtitle">Periodes de chauffe</div></div>
+            <div class="relay-rate">{{ relayActivityPercent }} % actif</div>
+          </div>
+          <div class="relay-layout">
+            <div class="relay-axis"><span>ON</span><span>OFF</span></div>
+            <div class="svg-wrapper">
+              <svg class="relay-chart" [attr.viewBox]="'0 0 ' + chartWidth + ' ' + relayChartHeight" preserveAspectRatio="none">
+                <line class="grid-line" x1="0" y1="25" [attr.x2]="chartWidth" y2="25"></line>
+                <line class="grid-line" x1="0" [attr.y1]="relayChartHeight - 25" [attr.x2]="chartWidth" [attr.y2]="relayChartHeight - 25"></line>
+                <line *ngFor="let tick of timeTicks" class="grid-line time-grid-line" [attr.x1]="tick.position" y1="0" [attr.x2]="tick.position" [attr.y2]="relayChartHeight"></line>
+                <path class="relay-area" [attr.d]="relayAreaPath"></path>
+                <path class="relay-line" [attr.d]="relayPath"></path>
+              </svg>
+              <div class="x-axis"><span *ngFor="let tick of timeTicks" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
+            </div>
+          </div>
+        </section>
+        </ng-container>
+
+        <ng-template #aggregateCharts>
+          <section class="glass-card chart-card">
+            <div class="chart-header">
+              <div><div class="chart-title">Temperature moyenne</div><div class="chart-subtitle">Amplitude min/max par periode</div></div>
+            </div>
+            <div class="chart-layout">
+              <div class="y-axis"><span *ngFor="let tick of temperatureTicks">{{ tick.label }}</span></div>
+              <div class="svg-wrapper">
+                <svg class="temperature-chart" [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" preserveAspectRatio="none">
+                  <line *ngFor="let tick of temperatureTicks" class="grid-line" x1="0" [attr.y1]="tick.position" [attr.x2]="chartWidth" [attr.y2]="tick.position"></line>
+                  <ng-container *ngFor="let bucket of summary; let index = index">
+                    <line *ngIf="bucket.minimumTemperature !== null && bucket.maximumTemperature !== null"
+                          [attr.x1]="aggregateX(index)" [attr.x2]="aggregateX(index)"
+                          [attr.y1]="aggregateTemperatureY(bucket.maximumTemperature)" [attr.y2]="aggregateTemperatureY(bucket.minimumTemperature)"
+                          stroke="#ef7857" stroke-width="5"></line>
+                    <circle *ngIf="bucket.averageTemperature !== null" [attr.cx]="aggregateX(index)"
+                            [attr.cy]="aggregateTemperatureY(bucket.averageTemperature)" r="7" fill="#ef7857"></circle>
+                  </ng-container>
+                </svg>
+                <div class="x-axis"><span *ngFor="let tick of aggregateTicks" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="glass-card chart-card">
+            <div class="chart-header">
+              <div><div class="chart-title">Activite du chauffage</div><div class="chart-subtitle">Pourcentage actif par periode</div></div>
+              <div class="relay-rate">{{ relayActivityPercent }} % actif</div>
+            </div>
+            <div class="relay-layout">
+              <div class="relay-axis"><span>100%</span><span>0%</span></div>
+              <div class="svg-wrapper">
+                <svg class="relay-chart" [attr.viewBox]="'0 0 ' + chartWidth + ' ' + relayChartHeight" preserveAspectRatio="none">
+                  <rect *ngFor="let bucket of summary; let index = index" [attr.x]="aggregateX(index) - aggregateDisplayWidth / 2"
+                        [attr.y]="aggregateRelayY(bucket)" [attr.width]="aggregateDisplayWidth"
+                        [attr.height]="aggregateRelayHeight(bucket)" fill="#f09a49"></rect>
+                </svg>
+                <div class="x-axis"><span *ngFor="let tick of aggregateTicks" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
+              </div>
+            </div>
+          </section>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+</ion-content>
