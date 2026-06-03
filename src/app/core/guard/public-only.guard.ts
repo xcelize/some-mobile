@@ -25,6 +25,7 @@ export const publicOnlyGuard: CanActivateFn = async (_route, state): Promise<boo
     const device = await authService.getCurrentDevice();
     await deviceService.setDeviceUuid(device.id);
     await deviceService.setDeviceId(device.externalId);
+    await deviceService.setDeviceName(device.name);
     return router.createUrlTree(['/tabs/tab1']);
   } catch (error) {
     if (error instanceof HttpErrorResponse && error.status === 400) {

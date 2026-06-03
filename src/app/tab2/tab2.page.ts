@@ -1,11 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import {CommonModule} from "@angular/common";
-import {IonButton, IonContent, IonIcon, IonToggle} from "@ionic/angular/standalone";
-import {FormsModule} from "@angular/forms";
+import {IonContent, IonIcon} from "@ionic/angular/standalone";
 import {PageHeaderComponent} from "../page-header/page-header.component";
 import {addIcons} from "ionicons";
-import {add, createOutline, ellipse, square, trashOutline, triangle, timeOutline, informationCircleOutline} from "ionicons/icons";
+import {add, calendarClearOutline, copyOutline, thermometerOutline, trashOutline} from "ionicons/icons";
 import {EspDaySchedule, EspPlanning, EspSlot, SlotPayload} from "../core/model/application.model";
 import {ThermostatService} from "../core/service/thermostat-service";
 
@@ -13,24 +12,27 @@ import {ThermostatService} from "../core/service/thermostat-service";
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  imports: [IonContent, PageHeaderComponent, FormsModule, CommonModule, IonIcon, IonButton]
+  imports: [IonContent, PageHeaderComponent, CommonModule, IonIcon]
 })
 export class Tab2Page implements OnInit {
 
-  constructor(private router: Router, private readonly thermostatService: ThermostatService ) {
-    addIcons({ triangle, ellipse, square, add, createOutline, trashOutline, timeOutline, informationCircleOutline });
+  private readonly router = inject(Router);
+  private readonly thermostatService = inject(ThermostatService);
+
+  constructor() {
+    addIcons({ add, calendarClearOutline, copyOutline, thermometerOutline, trashOutline });
   }
 
   selectedDay = 1;
 
   days = [
-    { label: 'Lun', value: 1 },
-    { label: 'Mar', value: 2 },
-    { label: 'Mer', value: 3 },
-    { label: 'Jeu', value: 4 },
-    { label: 'Ven', value: 5 },
-    { label: 'Sam', value: 6 },
-    { label: 'Dim', value: 0 },
+    { label: 'Lun', fullLabel: 'Lundi', value: 1 },
+    { label: 'Mar', fullLabel: 'Mardi', value: 2 },
+    { label: 'Mer', fullLabel: 'Mercredi', value: 3 },
+    { label: 'Jeu', fullLabel: 'Jeudi', value: 4 },
+    { label: 'Ven', fullLabel: 'Vendredi', value: 5 },
+    { label: 'Sam', fullLabel: 'Samedi', value: 6 },
+    { label: 'Dim', fullLabel: 'Dimanche', value: 0 },
   ];
 
   planning: EspPlanning | null = null;
@@ -69,6 +71,15 @@ export class Tab2Page implements OnInit {
     }
 
     return this.sortSlots(day.slots);
+  }
+
+  get selectedDayLabel(): string {
+    return this.days.find(day => day.value === this.selectedDay)?.fullLabel ?? 'Jour';
+  }
+
+  get slotCountLabel(): string {
+    const count = this.daySlots.length;
+    return `${count} créneau${count === 1 ? '' : 'x'} programmé${count === 1 ? '' : 's'}`;
   }
 
   openCreatePage(): void {
@@ -188,6 +199,18 @@ export class Tab2Page implements OnInit {
     }
 
     return 'hot';
+  }
+
+  getTempLabel(temp: number): string {
+    if (temp <= 18) {
+      return 'Température éco';
+    }
+
+    if (temp < 21) {
+      return 'Température confort';
+    }
+
+    return 'Température chaude';
   }
 
   trackBySlot(_index: number, slot: EspSlot): string {

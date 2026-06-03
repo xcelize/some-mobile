@@ -2,9 +2,17 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {from, Observable, of, switchMap} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {DeviceConsumptionResponse, DeviceTelemetryBucketResponse, DeviceTelemetryResponse} from '../model/application.model';
+import {
+  DeviceConsumptionResponse,
+  DeviceAlertResponse,
+  DeviceSuggestionResponse,
+  DeviceThermalMetricsResponse,
+  DeviceTelemetryBucketResponse,
+  DeviceTelemetryResponse
+} from '../model/application.model';
 import {AuthService} from './auth.service';
 import {DeviceService} from './device.service';
+import {CurrentDeviceResponse, TariffPeriod} from './auth.service';
 
 @Injectable({providedIn: 'root'})
 export class TelemetryService {
@@ -81,6 +89,111 @@ export class TelemetryService {
           switchMap((headers) => this.http.put(
             `${environment.apiBaseUrl}/api/devices/${deviceUuid}/electrical-power`,
             {electricalPowerKw},
+            {headers}
+          ))
+        );
+      })
+    );
+  }
+
+  updateName(name: string): Observable<CurrentDeviceResponse> {
+    return from(this.deviceService.getDeviceUuid()).pipe(
+      switchMap((deviceUuid) => {
+        if (!deviceUuid?.trim()) {
+          throw new Error('No linked device');
+        }
+
+        return from(this.authService.getAuthorizationHeaders()).pipe(
+          switchMap((headers) => this.http.put<CurrentDeviceResponse>(
+            `${environment.apiBaseUrl}/api/devices/${deviceUuid}/name`,
+            {name},
+            {headers}
+          ))
+        );
+      })
+    );
+  }
+
+  updateTariffPeriods(periods: TariffPeriod[]): Observable<CurrentDeviceResponse> {
+    return from(this.deviceService.getDeviceUuid()).pipe(
+      switchMap((deviceUuid) => {
+        if (!deviceUuid?.trim()) {
+          throw new Error('No linked device');
+        }
+
+        return from(this.authService.getAuthorizationHeaders()).pipe(
+          switchMap((headers) => this.http.put<CurrentDeviceResponse>(
+            `${environment.apiBaseUrl}/api/devices/${deviceUuid}/tariff-periods`,
+            {periods},
+            {headers}
+          ))
+        );
+      })
+    );
+  }
+
+  getSuggestions(days = 7): Observable<DeviceSuggestionResponse[]> {
+    return from(this.deviceService.getDeviceUuid()).pipe(
+      switchMap((deviceUuid) => {
+        if (!deviceUuid?.trim()) {
+          return of([]);
+        }
+
+        return from(this.authService.getAuthorizationHeaders()).pipe(
+          switchMap((headers) => this.http.get<DeviceSuggestionResponse[]>(
+            `${environment.apiBaseUrl}/api/devices/${deviceUuid}/suggestions`,
+            {headers, params: {days}}
+          ))
+        );
+      })
+    );
+  }
+
+  getAlerts(): Observable<DeviceAlertResponse[]> {
+    return from(this.deviceService.getDeviceUuid()).pipe(
+      switchMap((deviceUuid) => {
+        if (!deviceUuid?.trim()) {
+          return of([]);
+        }
+
+        return from(this.authService.getAuthorizationHeaders()).pipe(
+          switchMap((headers) => this.http.get<DeviceAlertResponse[]>(
+            `${environment.apiBaseUrl}/api/devices/${deviceUuid}/alerts`,
+            {headers}
+          ))
+        );
+      })
+    );
+  }
+
+  getThermalMetrics(days = 7): Observable<DeviceThermalMetricsResponse> {
+    return from(this.deviceService.getDeviceUuid()).pipe(
+      switchMap((deviceUuid) => {
+        if (!deviceUuid?.trim()) {
+          throw new Error('No linked device');
+        }
+
+        return from(this.authService.getAuthorizationHeaders()).pipe(
+          switchMap((headers) => this.http.get<DeviceThermalMetricsResponse>(
+            `${environment.apiBaseUrl}/api/devices/${deviceUuid}/thermal-metrics`,
+            {headers, params: {days}}
+          ))
+        );
+      })
+    );
+  }
+
+  updateLocation(latitude: number, longitude: number): Observable<unknown> {
+    return from(this.deviceService.getDeviceUuid()).pipe(
+      switchMap((deviceUuid) => {
+        if (!deviceUuid?.trim()) {
+          throw new Error('No linked device');
+        }
+
+        return from(this.authService.getAuthorizationHeaders()).pipe(
+          switchMap((headers) => this.http.put(
+            `${environment.apiBaseUrl}/api/devices/${deviceUuid}/location`,
+            {latitude, longitude},
             {headers}
           ))
         );

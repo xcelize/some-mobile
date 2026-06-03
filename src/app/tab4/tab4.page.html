@@ -9,6 +9,31 @@
         <span>Thermostat</span>
       </div>
 
+      <div class="glass-card name-card">
+        <div class="calibration-card__header">
+          Nom du thermostat
+        </div>
+
+        <div class="calibration-card__body">
+          <div class="power-title">
+            Nom affiché dans l’application
+          </div>
+
+          <div class="name-input-row">
+            <input id="thermostat-name" type="text" maxlength="150"
+                   [(ngModel)]="nameInput" placeholder="Ex. Salon">
+            <button type="button" [disabled]="!nameIsValid || savingName"
+                    (click)="saveName()">
+              {{ savingName ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+          </div>
+
+          <div class="power-help">
+            {{ nameMessage || 'L’identifiant technique du thermostat reste inchangé.' }}
+          </div>
+        </div>
+      </div>
+
       <div class="glass-card calibration-card">
         <div class="calibration-card__header">
           Calibration
@@ -35,6 +60,53 @@
 
           <div class="calibration-help">
             {{ commandError() || 'Utilisez cette valeur si la température mesurée diffère de votre thermomètre de référence.' }}
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card tariff-card">
+        <div class="calibration-card__header">
+          Tarification électrique
+        </div>
+
+        <div class="calibration-card__body">
+          <div class="power-title">
+            Journée tarifaire de 00:00 à 24:00
+          </div>
+
+          <div class="tariff-period" *ngFor="let period of tariffPeriods; let index = index">
+            <div class="tariff-time">
+              <span *ngIf="index === 0" class="tariff-time-fixed">00:00</span>
+              <input *ngIf="index !== 0" type="time" [(ngModel)]="period.startTime"
+                     [attr.aria-label]="'Début de la période ' + (index + 1)">
+              <span>à</span>
+              <span>{{ tariffPeriodEnd(index) }}</span>
+            </div>
+
+            <select [(ngModel)]="period.rate" [attr.aria-label]="'Tarif de la période ' + (index + 1)">
+              <option value="OFF_PEAK">Heures creuses</option>
+              <option value="PEAK">Heures pleines</option>
+            </select>
+
+            <button *ngIf="index !== 0" type="button" class="tariff-remove"
+                    [attr.aria-label]="'Supprimer la période ' + (index + 1)"
+                    (click)="removeTariffPeriod(index)">
+              Supprimer
+            </button>
+          </div>
+
+          <button type="button" class="tariff-add" (click)="addTariffPeriod()">
+            Ajouter une période
+          </button>
+
+          <button type="button" class="tariff-save"
+                  [disabled]="loadingTariffPeriods || savingTariffPeriods || !tariffPeriodsAreValid"
+                  (click)="saveTariffPeriods()">
+            {{ savingTariffPeriods ? 'Enregistrement...' : 'Enregistrer la grille' }}
+          </button>
+
+          <div class="power-help">
+            {{ tariffMessage || tariffValidationMessage }}
           </div>
         </div>
       </div>

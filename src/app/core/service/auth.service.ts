@@ -17,6 +17,12 @@ export interface CurrentDeviceResponse {
   externalId: string;
   name: string;
   electricalPowerKw: number | null;
+  tariffPeriods: TariffPeriod[];
+}
+
+export interface TariffPeriod {
+  startTime: string;
+  rate: 'OFF_PEAK' | 'PEAK';
 }
 
 @Injectable({

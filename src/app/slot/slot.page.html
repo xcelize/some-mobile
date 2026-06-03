@@ -1,48 +1,45 @@
 <ion-content [fullscreen]="true">
-  <page-header
-    [title]="pageTitle"
-    [subtitle]="dayLabel">
-  </page-header>
+  <page-header [title]="pageTitle" [subtitle]="dayLabel"></page-header>
 
-  <div class="slot-form-page">
-    <div class="page-shell">
-      <div class="glass-card form-card">
-        <div class="form-group">
-          <label class="form-label">Heure de début</label>
-          <ion-input
-            type="time"
-            fill="outline"
-            [(ngModel)]="slotForm.start">
-          </ion-input>
+  <main class="slot-form-shell">
+    <section class="form-card glass-panel">
+      <div class="form-intro">
+        <div class="intro-icon">
+          <ion-icon name="time-outline"></ion-icon>
         </div>
-
-        <div class="form-group">
-          <label class="form-label">Température</label>
-          <ion-input
-            type="number"
-            inputmode="decimal"
-            fill="outline"
-            [(ngModel)]="slotForm.temperature">
-          </ion-input>
-        </div>
-
-        <div class="preview-card">
-          <div class="preview-label">Aperçu</div>
-          <div class="preview-value">
-            {{ formatHour(slotForm.start) }} • {{ slotForm.temperature || 0 }}°C
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <ion-button expand="block" (click)="cancel()">
-            Annuler
-          </ion-button>
-
-          <ion-button expand="block" (click)="save()">
-            {{ mode === 'create' ? 'Ajouter' : 'Enregistrer' }}
-          </ion-button>
+        <div>
+          <div class="card-eyebrow">Programmation</div>
+          <div class="intro-title">Définissez votre créneau</div>
+          <div class="intro-help">La température sera appliquée à partir de l’heure indiquée.</div>
         </div>
       </div>
+
+      <label class="form-group">
+        <span class="form-label">Heure de début</span>
+        <ion-input type="time" fill="outline" [(ngModel)]="slotForm.start"></ion-input>
+      </label>
+
+      <label class="form-group">
+        <span class="form-label">Température souhaitée</span>
+        <ion-input type="number" inputmode="decimal" fill="outline" [(ngModel)]="slotForm.temperature"></ion-input>
+      </label>
+
+      <div class="preview-card">
+        <div>
+          <div class="card-eyebrow">Aperçu du créneau</div>
+          <div class="preview-time">À partir de {{ formatHour(slotForm.start) }}</div>
+        </div>
+        <div class="preview-temperature">
+          {{ slotForm.temperature || 0 }}<small>°C</small>
+        </div>
+      </div>
+    </section>
+
+    <div class="form-actions">
+      <button type="button" class="secondary-btn" (click)="cancel()">Annuler</button>
+      <button type="button" class="primary-btn" (click)="save()">
+        {{ mode === 'create' ? 'Ajouter le créneau' : 'Enregistrer' }}
+      </button>
     </div>
-  </div>
+  </main>
 </ion-content>

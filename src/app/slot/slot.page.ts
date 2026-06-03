@@ -1,18 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {IonButton, IonContent, IonHeader, IonInput, IonTitle, IonToolbar} from '@ionic/angular/standalone';
-import {ActivatedRoute, Router} from "@angular/router";
+import {IonContent, IonIcon, IonInput} from '@ionic/angular/standalone';
+import {Router} from "@angular/router";
 import {PageHeaderComponent} from "../page-header/page-header.component";
+import {addIcons} from "ionicons";
+import {timeOutline} from "ionicons/icons";
 
 @Component({
   selector: 'app-slot',
   templateUrl: './slot.page.html',
   styleUrls: ['./slot.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, IonButton, IonInput, PageHeaderComponent]
+  imports: [IonContent, IonIcon, CommonModule, FormsModule, IonInput, PageHeaderComponent]
 })
 export class SlotPage {
+
+  private readonly router = inject(Router);
 
   mode: 'create' | 'edit' = 'create';
   dayOfWeek = 1;
@@ -33,10 +37,9 @@ export class SlotPage {
     0: 'Dimanche',
   };
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-  ) {}
+  constructor() {
+    addIcons({timeOutline});
+  }
 
   ionViewWillEnter(): void {
 

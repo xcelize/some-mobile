@@ -1,71 +1,148 @@
-.slot-form-page {
-  padding: 12px 0 40px;
-}
-
-.page-shell {
-  width: 100%;
-  max-width: 430px;
-  margin: 0 auto;
-  padding: 0 16px;
+.slot-form-shell {
+  width: min(100%, 430px);
   box-sizing: border-box;
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
+  margin: 0 auto;
+  padding: 0 16px 112px;
 }
 
 .form-card {
   padding: 18px;
+  border-radius: var(--app-radius-lg);
+}
+
+.form-intro,
+.preview-card,
+.form-actions {
   display: flex;
-  flex-direction: column;
-  gap: 18px;
+  align-items: center;
+}
+
+.form-intro {
+  gap: 12px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid var(--app-divider);
+}
+
+.intro-icon {
+  display: grid;
+  width: 45px;
+  height: 45px;
+  flex: 0 0 45px;
+  border-radius: 15px;
+  color: #a9ceff;
+  background: var(--app-primary-soft);
+  place-items: center;
+}
+
+.intro-icon ion-icon {
+  font-size: 23px;
+}
+
+.card-eyebrow {
+  color: var(--app-text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+}
+
+.intro-title {
+  margin-top: 4px;
+  color: var(--app-text);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.intro-help {
+  margin-top: 4px;
+  color: var(--app-text-muted);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: block;
+  margin-top: 18px;
 }
 
 .form-label {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #fff;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--app-text-soft);
+  font-size: 13px;
+  font-weight: 750;
 }
 
 ion-input {
-  --background: rgba(255, 255, 255, 0.04);
+  --background: rgba(3, 20, 52, 0.25);
+  --border-color: rgba(255, 255, 255, 0.13);
   --border-radius: 16px;
-  --color: #fff;
+  --color: var(--app-text);
+  --highlight-color-focused: var(--app-primary);
+  --padding-start: 14px;
+  min-height: 54px;
 }
 
 .preview-card {
-  padding: 16px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid rgba(168, 207, 255, 0.16);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--app-primary-soft);
 }
 
-.preview-label {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.65);
-  margin-bottom: 6px;
+.preview-time {
+  margin-top: 5px;
+  color: var(--app-text);
+  font-size: 14px;
+  font-weight: 750;
 }
 
-.preview-value {
-  font-size: 1.05rem;
-  font-weight: 700;
+.preview-temperature {
   color: #fff;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.preview-temperature small {
+  margin-left: 2px;
+  color: var(--app-text-soft);
+  font-size: 13px;
 }
 
 .form-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-ion-input {
-  --padding-start: 16px;
+.secondary-btn,
+.primary-btn {
+  min-height: 52px;
+  border-radius: 17px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.secondary-btn {
+  flex: 0 0 33%;
+  border: 1px solid var(--app-border);
+  color: var(--app-text-soft);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.primary-btn {
+  flex: 1;
+  border: 1px solid rgba(183, 216, 255, 0.25);
+  color: #fff;
+  background: linear-gradient(145deg, var(--app-primary), var(--app-primary-strong));
+  box-shadow: 0 10px 22px rgba(25, 100, 227, 0.28);
+}
+
+@media (max-width: 370px) {
+  .slot-form-shell {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
 }

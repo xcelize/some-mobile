@@ -1,12 +1,11 @@
 <ion-content [fullscreen]="true">
-  <page-header
-    [title]="'Planning'"
-    [subtitle]="'Programmez vos températures'">
-  </page-header>
+  <page-header title="Planning" subtitle="Votre confort, heure par heure"></page-header>
 
-  <div class="planning-page">
-    <div class="page-shell">
-      <div class="days-row">
+  <main class="planning-shell">
+    <section class="days-section">
+      <div class="section-label">Jour de la semaine</div>
+
+      <div class="days-row glass-panel">
         <button
           *ngFor="let day of days"
           type="button"
@@ -16,73 +15,89 @@
           {{ day.label }}
         </button>
       </div>
-      <div class="glass-card mode-card">
-        <div class="mode-card__left">
-          <div class="mode-card__icon">
-            <ion-icon name="information-circle-outline"></ion-icon>
-          </div>
+    </section>
 
-          <div class="mode-card__content">
-            <div class="mode-card__title">
-              Copier la journée
-            </div>
-            <div class="mode-card__subtitle">
-              Cliquer pour copier ces horaires sur l'ensemble de la semaine
-            </div>
-          </div>
-        </div>
-
-        <ion-button [size]="'small'" (click)="copyDayScheduleToWeek(daySlots)">Copier</ion-button>
+    <section class="day-overview glass-panel">
+      <div>
+        <div class="card-eyebrow">Programme du jour</div>
+        <h2>{{ selectedDayLabel }}</h2>
+        <p>{{ slotCountLabel }}</p>
       </div>
-      <div class="glass-card schedule-card">
-        <div class="schedule-header">
-          <span>Heure</span>
-          <span>Température</span>
+
+      <button type="button" class="copy-btn" (click)="copyDayScheduleToWeek(daySlots)">
+        <ion-icon name="copy-outline"></ion-icon>
+        <span>Copier</span>
+      </button>
+    </section>
+
+    <section class="schedule-section">
+      <div class="schedule-heading">
+        <div>
+          <div class="section-label">Chronologie</div>
+          <div class="section-help">Touchez un créneau pour le modifier.</div>
         </div>
 
-        <div class="schedule-list" *ngIf="daySlots.length; else emptyState">
-          <div
-            class="schedule-item"
-            *ngFor="let slot of daySlots; let i = index; trackBy: trackBySlot">
-            <div class="color-bar" [ngClass]="getTempClass(slot.temperature)"></div>
+        <div class="legend">
+          <span><i class="cold"></i>Éco</span>
+          <span><i class="warm"></i>Confort</span>
+          <span><i class="hot"></i>Chaud</span>
+        </div>
+      </div>
 
-            <div class="slot-main" (click)="openEditPage(i)">
+      <div class="schedule-list" *ngIf="daySlots.length; else emptyState">
+        <article
+          class="schedule-item"
+          *ngFor="let slot of daySlots; let i = index; trackBy: trackBySlot"
+          [ngClass]="getTempClass(slot.temperature)"
+          (click)="openEditPage(i)">
+          <div class="timeline-column">
+            <span class="timeline-dot"></span>
+            <span class="timeline-line" *ngIf="i < daySlots.length - 1"></span>
+          </div>
+
+          <div class="slot-card glass-panel">
+            <div class="slot-main">
               <div class="slot-time">
-                <ion-icon name="time-outline"></ion-icon>
-                <div class="time-range">
-                  {{ formatHour(slot.start) }} - {{ getSlotEnd(i) }}
-                </div>
+                <span class="slot-start">{{ formatHour(slot.start) }}</span>
+                <span class="slot-end">jusqu’à {{ getSlotEnd(i) }}</span>
               </div>
 
               <div class="temp-pill" [ngClass]="getTempClass(slot.temperature)">
-                {{ slot.temperature }}°C
-              </div>
-
-              <div class="slot-actions">
-                <button
-                  type="button"
-                  [disabled]="!canDeleteSlot(i)"
-                  (click)="deleteSlot(i)">
-                  <ion-icon name="trash-outline"></ion-icon>
-                </button>
+                {{ slot.temperature }}<small>°C</small>
               </div>
             </div>
-          </div>
-        </div>
 
-        <ng-template #emptyState>
-          <div class="empty-state">
-            Aucun créneau pour ce jour
-          </div>
-        </ng-template>
+            <div class="slot-footer">
+              <div class="slot-label">
+                <ion-icon name="thermometer-outline"></ion-icon>
+                <span>{{ getTempLabel(slot.temperature) }}</span>
+              </div>
 
-        <button type="button" class="add-slot-btn" (click)="openCreatePage()">
-          <span class="add-slot-btn__circle">
-            <ion-icon name="add"></ion-icon>
-          </span>
-          Ajouter un créneau horaire
-        </button>
+              <button
+                type="button"
+                class="delete-btn"
+                aria-label="Supprimer le créneau"
+                [disabled]="!canDeleteSlot(i)"
+                (click)="$event.stopPropagation(); deleteSlot(i)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </article>
       </div>
-    </div>
-  </div>
+
+      <ng-template #emptyState>
+        <div class="empty-state glass-panel">
+          <ion-icon name="calendar-clear-outline"></ion-icon>
+          <strong>Aucun créneau</strong>
+          <span>Ajoutez une première température pour cette journée.</span>
+        </div>
+      </ng-template>
+    </section>
+
+    <button type="button" class="add-slot-btn" (click)="openCreatePage()">
+      <ion-icon name="add"></ion-icon>
+      <span>Ajouter un créneau</span>
+    </button>
+  </main>
 </ion-content>

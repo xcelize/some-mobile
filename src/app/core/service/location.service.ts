@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { DeviceService } from './device.service';
+import {firstValueFrom} from 'rxjs';
+import {TelemetryService} from './telemetry.service';
 
 export interface LocationInitResult {
   success: boolean;
@@ -12,11 +14,15 @@ export interface LocationInitResult {
   providedIn: 'root',
 })
 export class LocationService {
-  constructor(private deviceService: DeviceService) {}
+  constructor(
+    private deviceService: DeviceService,
+    private telemetryService: TelemetryService
+  ) {}
 
   async initCoordinatesIfNeeded(): Promise<LocationInitResult> {
     const alreadyStored = await this.deviceService.hasCoordinates();
     if (alreadyStored) {
+      await this.syncStoredCoordinates();
       return {
         success: true,
         source: 'stored',
@@ -56,10 +62,25 @@ export class LocationService {
       position.coords.latitude,
       position.coords.longitude
     );
+    await this.syncStoredCoordinates();
 
     return {
       success: true,
       source: 'gps',
     };
+  }
+
+  async syncStoredCoordinates(): Promise<void> {
+    const latitude = await this.deviceService.getLatitude();
+    const longitude = await this.deviceService.getLongitude();
+    if (latitude === null || longitude === null) {
+      return;
+    }
+
+    try {
+      await firstValueFrom(this.telemetryService.updateLocation(latitude, longitude));
+    } catch {
+      // The device may not be linked yet. A later app startup or login retries the sync.
+    }
   }
 }

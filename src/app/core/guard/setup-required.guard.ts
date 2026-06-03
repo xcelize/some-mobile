@@ -16,6 +16,14 @@ export const setupRequiredGuard: CanActivateFn = async (): Promise<boolean | Url
   const deviceId = await deviceService.getDeviceId();
 
   if (deviceUuid?.trim() && deviceId?.trim()) {
+    if (!await deviceService.hasStoredDeviceName()) {
+      try {
+        const device = await authService.getCurrentDevice();
+        await deviceService.setDeviceName(device.name);
+      } catch {
+        // Keep the cached fallback while the backend is unavailable.
+      }
+    }
     return true;
   }
 
@@ -23,6 +31,7 @@ export const setupRequiredGuard: CanActivateFn = async (): Promise<boolean | Url
     const device = await authService.getCurrentDevice();
     await deviceService.setDeviceUuid(device.id);
     await deviceService.setDeviceId(device.externalId);
+    await deviceService.setDeviceName(device.name);
     return true;
   } catch {
     return router.createUrlTree(['/setup']);

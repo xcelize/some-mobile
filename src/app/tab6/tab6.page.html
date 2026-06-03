@@ -1,0 +1,103 @@
+<ion-content [fullscreen]="true">
+  <page-header [title]="'Conseils'" [subtitle]="'Analyse des 7 derniers jours'"></page-header>
+
+  <div class="suggestions-page">
+    <div class="page-shell">
+      <div class="intro-card glass-card">
+        <div class="intro-icon">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+        </div>
+        <div>
+          <div class="intro-title">Suggestions uniquement</div>
+          <div class="intro-text">
+            L’application analyse vos relevés et votre grille tarifaire. Aucun réglage n’est modifié automatiquement.
+          </div>
+        </div>
+      </div>
+
+      <div class="toolbar thermal-toolbar">
+        <div class="section-title">Comportement thermique</div>
+      </div>
+
+      <div *ngIf="!loading && !errorMessage" class="glass-card thermal-card">
+        <div class="thermal-grid">
+          <div>
+            <span>Refroidissement moyen</span>
+            <strong>
+              {{ thermalMetrics?.coolingRateCelsiusPerHour === null || thermalMetrics?.coolingRateCelsiusPerHour === undefined
+                ? '--'
+                : '-' + (thermalMetrics!.coolingRateCelsiusPerHour | number:'1.1-2') + ' °C/h' }}
+            </strong>
+          </div>
+          <div>
+            <span>Temps pour gagner 1 °C</span>
+            <strong>
+              {{ thermalMetrics?.heatingMinutesPerDegree === null || thermalMetrics?.heatingMinutesPerDegree === undefined
+                ? '--'
+                : thermalMetrics!.heatingMinutesPerDegree + ' min' }}
+            </strong>
+          </div>
+          <div>
+            <span>Température extérieure</span>
+            <strong>
+              {{ thermalMetrics?.latestOutdoorTemperature === null || thermalMetrics?.latestOutdoorTemperature === undefined
+                ? '--'
+                : (thermalMetrics!.latestOutdoorTemperature | number:'1.0-1') + ' °C' }}
+            </strong>
+          </div>
+          <div>
+            <span>Fiabilité</span>
+            <strong>{{ confidenceLabel }}</strong>
+          </div>
+        </div>
+        <p>
+          L’estimation s’affine progressivement grâce aux relevés intérieurs, à la météo extérieure et à l’activité du chauffage.
+        </p>
+      </div>
+
+      <div class="toolbar">
+        <div class="section-title">Recommandations</div>
+        <button type="button" class="refresh-button" [disabled]="loading" (click)="loadSuggestions()">
+          <ion-icon name="refresh-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div *ngIf="loading" class="glass-card message-card">Analyse des relevés...</div>
+      <div *ngIf="!loading && errorMessage" class="glass-card message-card">{{ errorMessage }}</div>
+
+      <div *ngIf="!loading && !errorMessage && alerts.length" class="alert-list">
+        <article *ngFor="let alert of alerts" class="glass-card alert-card" [class.alert-card--critical]="alert.severity === 'CRITICAL'">
+          <div class="alert-card__icon">
+            <ion-icon name="warning-outline"></ion-icon>
+          </div>
+          <div>
+            <div class="alert-card__severity">{{ alertSeverityLabel(alert) }}</div>
+            <h2>{{ alert.title }}</h2>
+            <p>{{ alert.message }}</p>
+          </div>
+        </article>
+      </div>
+
+      <div *ngIf="!loading && !errorMessage && !suggestions.length" class="glass-card message-card">
+        <ion-icon name="bulb-outline"></ion-icon>
+        <div>
+          <strong>Aucun conseil pour le moment</strong>
+          <p>Continuez à utiliser le thermostat. Les conseils apparaîtront lorsque suffisamment de chauffe sera observée.</p>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && !errorMessage && suggestions.length" class="suggestion-list">
+        <article *ngFor="let suggestion of suggestions" class="glass-card suggestion-card">
+          <div class="suggestion-card__icon">
+            <ion-icon name="bulb-outline"></ion-icon>
+          </div>
+          <div>
+            <div class="suggestion-card__priority">{{ suggestion.priority === 'HIGH' ? 'Prioritaire' : 'À envisager' }}</div>
+            <h2>{{ suggestion.title }}</h2>
+            <p>{{ suggestion.message }}</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</ion-content>

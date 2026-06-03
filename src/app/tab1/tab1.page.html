@@ -6,7 +6,7 @@
       <div class="hero-topline">
         <div class="room-chip">
           <ion-icon name="home-outline"></ion-icon>
-          <span>Salon</span>
+          <span>{{ deviceName() }}</span>
         </div>
 
         <div class="online-chip" [class.is-offline]="!thermostatOnline">
@@ -74,8 +74,6 @@
       <div class="section-label">Mode de fonctionnement</div>
 
       <div class="mode-switch glass-panel" [attr.data-mode]="mode">
-        <div class="mode-thumb"></div>
-
         <button type="button" class="mode-btn" [class.active]="mode === 'AUTO'"
                 [disabled]="commandPending()" (click)="changeMode('AUTO')">
           <ion-icon name="calendar-clear-outline"></ion-icon>

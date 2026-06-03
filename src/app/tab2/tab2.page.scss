@@ -1,277 +1,352 @@
-.page-shell {
-  width: 100%;
-  max-width: 430px;
-  margin: 0 auto;
-  padding: 0 16px;
+.planning-shell {
+  width: min(100%, 430px);
   box-sizing: border-box;
+  margin: 0 auto;
+  padding: 0 16px 118px;
 }
 
-/* =========================
-   JOURS
-========================= */
+.section-label,
+.card-eyebrow {
+  color: var(--app-text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+}
 
 .days-row {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 4px;
+  border-radius: 20px;
 }
 
 .day-btn {
-  height: 30px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.7);
-  font-size: 0.75rem;
-  font-weight: 700;
+  min-width: 0;
+  height: 45px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  color: var(--app-text-soft);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 750;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .day-btn.active {
-  background: linear-gradient(135deg, #2f78ff, #4b8cff);
+  border-color: rgba(183, 216, 255, 0.25);
   color: #fff;
-  border: none;
+  background: linear-gradient(145deg, var(--app-primary), var(--app-primary-strong));
+  box-shadow: 0 7px 16px rgba(25, 100, 227, 0.28);
 }
 
-/* =========================
-   CARD
-========================= */
-
-.glass-card {
-  background: rgba(255,255,255,0.06);
-  border-radius: 22px;
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(10px);
-}
-
-/* =========================
-   TABLEAU
-========================= */
-
-.schedule-card {
-  overflow: hidden;
-  padding: 12px 0 16px;
-}
-
-.schedule-header {
+.day-overview {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 18px 10px;
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.65);
+  gap: 14px;
+  margin-top: 14px;
+  padding: 17px;
+  border-radius: var(--app-radius-lg);
+}
+
+.day-overview h2 {
+  margin: 5px 0 0;
+  color: var(--app-text);
+  font-size: 22px;
+  letter-spacing: -0.4px;
+}
+
+.day-overview p {
+  margin: 5px 0 0;
+  color: var(--app-text-soft);
+  font-size: 13px;
+}
+
+.copy-btn,
+.add-slot-btn,
+.delete-btn,
+.slot-label {
+  display: flex;
+  align-items: center;
+}
+
+.copy-btn {
+  flex: 0 0 auto;
+  gap: 7px;
+  padding: 10px 11px;
+  border: 1px solid rgba(168, 207, 255, 0.18);
+  border-radius: 14px;
+  color: #b9d9ff;
+  background: var(--app-primary-soft);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.copy-btn ion-icon {
+  font-size: 17px;
+}
+
+.schedule-section {
+  margin-top: 22px;
+}
+
+.schedule-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 4px 12px;
+}
+
+.section-help {
+  margin-top: 5px;
+  color: var(--app-text-muted);
+  font-size: 12px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px 8px;
+  color: var(--app-text-muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.legend .cold {
+  background: #5fa5ff;
+}
+
+.legend .warm {
+  background: #ffbd61;
+}
+
+.legend .hot {
+  background: #ff8259;
+}
+
+.schedule-list {
+  display: flex;
+  flex-direction: column;
 }
 
 .schedule-item {
-  position: relative;
-  min-height: 80px;
-  background: linear-gradient(
-    160deg,
-    rgb(30, 1 , 60, 0.3),
-    rgba(100, 70, 120, 1)
-  );
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    0 8px 25px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.schedule-item:first-child {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-.schedule-item:last-child {
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-
-.schedule-item + .schedule-item {
-  border-top: 1px solid rgba(255,255,255,0.06);
-}
-
-.color-bar {
-  position: absolute;
-  left: 0;
-  top: 10px;
-  bottom: 10px;
-  width: 5px;
-  border-radius: 0 10px 10px 0;
-}
-
-.color-bar.cold { background: #2f80ff; }
-.color-bar.warm { background: #f5a623; }
-.color-bar.hot { background: #f47c20; }
-
-.slot-main {
   display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: 10px;
-  padding: 0 16px 0 22px;
-  min-height: 80px;
+  grid-template-columns: 25px minmax(0, 1fr);
+  cursor: pointer;
 }
 
-.slot-time {
+.timeline-column {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.slot-time ion-icon {
-  font-size: 1.5rem;
-  color: rgba(255,255,255, 1);
-}
-
-.time-range {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #fff;
-}
-
-/* température */
-
-.temp-pill {
-  min-width: 70px;
-  height: 38px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: white;
 }
 
-.temp-pill.cold {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-}
-
-.temp-pill.warm {
-  background: linear-gradient(135deg, #f5a623, #d48806);
-}
-
-.temp-pill.hot {
-  background: linear-gradient(135deg, #fb923c, #ea580c);
-}
-
-/* actions */
-
-.slot-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.slot-actions button {
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.7);
-}
-
-.slot-actions ion-icon {
-  font-size: 1.1rem;
-}
-
-/* bouton add */
-
-.add-slot-btn {
-  width: calc(100% - 32px);
-  margin: 16px;
-  padding: 14px;
-  border-radius: 18px;
-  background: linear-gradient(
-    160deg,
-    rgb(30, 1 , 100, 0.3),
-    rgba(100, 70, 120, 1)
-  );
-  color: #63a8ff;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border: none;
-}
-
-.add-slot-btn__circle {
-  width: 38px;
-  height: 38px;
+.timeline-dot {
+  position: relative;
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  margin-top: 21px;
+  border: 3px solid rgba(10, 33, 74, 0.9);
   border-radius: 50%;
-  border: 2px dashed rgba(99,168,255,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #5fa5ff;
+  box-shadow: 0 0 0 3px rgba(95, 165, 255, 0.18);
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
+.timeline-line {
+  position: absolute;
+  top: 30px;
+  bottom: -21px;
+  width: 1px;
+  background: rgba(185, 218, 255, 0.22);
 }
 
-.mode-card {
+.schedule-item.warm .timeline-dot {
+  background: #ffbd61;
+  box-shadow: 0 0 0 3px rgba(255, 189, 97, 0.16);
+}
+
+.schedule-item.hot .timeline-dot {
+  background: #ff8259;
+  box-shadow: 0 0 0 3px rgba(255, 130, 89, 0.16);
+}
+
+.slot-card {
+  overflow: hidden;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  transition:
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.slot-card:active {
+  transform: scale(0.985);
+}
+
+.slot-main,
+.slot-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  padding: 14px 16px;
-  margin-bottom: 16px;
+  gap: 12px;
 }
 
-.mode-card__left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-  flex: 1;
+.slot-main {
+  padding: 14px 14px 12px;
 }
 
-.mode-card__icon {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #4f98ff;
+.slot-start {
+  display: block;
+  color: var(--app-text);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
 }
 
-.mode-card__icon ion-icon {
-  font-size: 2rem;
+.slot-end {
+  display: block;
+  margin-top: 3px;
+  color: var(--app-text-muted);
+  font-size: 12px;
 }
 
-.mode-card__content {
-  min-width: 0;
-}
-
-.mode-card__title {
-  font-size: .8rem;
-  font-weight: 700;
+.temp-pill {
+  min-width: 68px;
+  padding: 9px 9px;
+  border-radius: 15px;
   color: #fff;
-  line-height: 1.2;
+  background: linear-gradient(145deg, #438eea, #286bd2);
+  font-size: 17px;
+  font-weight: 800;
+  text-align: center;
 }
 
-.mode-card__title span {
-  color: #63a8ff;
+.temp-pill.warm {
+  background: linear-gradient(145deg, #f5ad45, #d88a22);
 }
 
-.mode-card__subtitle {
-  margin-top: 4px;
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.72);
-  line-height: 1.3;
+.temp-pill.hot {
+  background: linear-gradient(145deg, #ff8e5a, #e45e41);
 }
 
-.mode-card__toggle {
-  --track-background: rgba(255, 255, 255, 0.18);
-  --track-background-checked: linear-gradient(135deg, #2f78ff, #4b8cff);
-  --handle-background: #ffffff;
-  --handle-background-checked: #ffffff;
-
-  padding: 0;
+.temp-pill small {
+  margin-left: 2px;
+  font-size: 11px;
 }
 
+.slot-footer {
+  min-height: 42px;
+  padding: 0 8px 0 14px;
+  border-top: 1px solid var(--app-divider);
+}
+
+.slot-label {
+  gap: 6px;
+  color: var(--app-text-soft);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.slot-label ion-icon {
+  color: #9bc5ff;
+  font-size: 15px;
+}
+
+.delete-btn {
+  justify-content: center;
+  width: 36px;
+  height: 34px;
+  border: 0;
+  border-radius: 11px;
+  color: #ffacac;
+  background: rgba(255, 128, 128, 0.1);
+}
+
+.delete-btn:disabled {
+  color: var(--app-text-muted);
+  background: transparent;
+  opacity: 0.38;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 25px 18px;
+  border-radius: var(--app-radius-lg);
+  color: var(--app-text-soft);
+  text-align: center;
+}
+
+.empty-state ion-icon {
+  color: #a9ceff;
+  font-size: 30px;
+}
+
+.empty-state strong {
+  color: var(--app-text);
+  font-size: 16px;
+}
+
+.empty-state span {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.add-slot-btn {
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 54px;
+  margin-top: 6px;
+  border: 1px solid rgba(183, 216, 255, 0.25);
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(145deg, var(--app-primary), var(--app-primary-strong));
+  box-shadow: 0 10px 22px rgba(25, 100, 227, 0.28);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.add-slot-btn ion-icon {
+  font-size: 21px;
+}
+
+@media (max-width: 370px) {
+  .planning-shell {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .schedule-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .legend {
+    justify-content: flex-start;
+  }
+}

@@ -3,6 +3,8 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import {DeviceService} from "./core/service/device.service";
 import {LocationService} from "./core/service/location.service";
 import {Router} from "@angular/router";
+import {AuthService} from "./core/service/auth.service";
+import {PushNotificationService} from "./core/service/push-notification.service";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +15,9 @@ export class AppComponent {
   constructor(
     private deviceService: DeviceService,
     private locationService: LocationService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private pushNotifications: PushNotificationService
   ) {
     this.initApp();
   }
@@ -25,6 +29,10 @@ export class AppComponent {
 
     if (!result.success && result.denied) {
       await this.router.navigate(['/location-setup']);
+    }
+
+    if (await this.authService.hasSession()) {
+      await this.pushNotifications.init();
     }
   }
 

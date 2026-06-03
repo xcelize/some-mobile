@@ -10,6 +10,8 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {DeviceService} from '../core/service/device.service';
 import {ThermostatService} from '../core/service/thermostat-service';
 import {AuthService, CurrentDeviceResponse} from '../core/service/auth.service';
+import {LocationService} from '../core/service/location.service';
+import {PushNotificationService} from '../core/service/push-notification.service';
 
 @Component({
   selector: 'app-configuration',
@@ -32,7 +34,9 @@ export class ConfigurationPage implements OnInit {
     private readonly deviceService: DeviceService,
     private readonly router: Router,
     private readonly thermostatService: ThermostatService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly locationService: LocationService,
+    private readonly pushNotifications: PushNotificationService
   ) {
     addIcons({
       hardwareChipOutline,
@@ -127,7 +131,10 @@ export class ConfigurationPage implements OnInit {
   private async enterAppWithDevice(device: CurrentDeviceResponse): Promise<void> {
     await this.deviceService.setDeviceUuid(device.id);
     await this.deviceService.setDeviceId(device.externalId);
+    await this.deviceService.setDeviceName(device.name);
+    await this.locationService.syncStoredCoordinates();
     await this.thermostatService.init();
+    await this.pushNotifications.init();
     await this.router.navigate(['/tabs/tab1']);
   }
 

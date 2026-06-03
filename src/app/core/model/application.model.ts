@@ -86,3 +86,28 @@ export interface DeviceTelemetryBucketResponse {
   maximumTemperature: number | null;
   relayActivityPercent: number;
 }
+
+export interface DeviceSuggestionResponse {
+  code: string;
+  priority: 'LOW' | 'MEDIUM' | 'HIGH';
+  title: string;
+  message: string;
+}
+
+export interface DeviceAlertResponse {
+  type: 'OFFLINE' | 'OVERHEATING' | 'LOW_TEMPERATURE' | 'HEATING_INEFFICIENT' | 'RAPID_COOLING';
+  severity: 'WARNING' | 'CRITICAL';
+  title: string;
+  message: string;
+  createdAt: string;
+  lastDetectedAt: string;
+}
+
+export interface DeviceThermalMetricsResponse {
+  coolingRateCelsiusPerHour: number | null;
+  heatingMinutesPerDegree: number | null;
+  latestOutdoorTemperature: number | null;
+  analyzedCoolingMinutes: number;
+  analyzedHeatingMinutes: number;
+  confidence: 'LOW' | 'MEDIUM' | 'HIGH';
+}

@@ -22,6 +22,7 @@ import {
   timeOutline
 } from "ionicons/icons";
 import {Haptics, ImpactStyle} from "@capacitor/haptics";
+import {DeviceService} from "../core/service/device.service";
 
 @Component({
   selector: 'app-tab1',
@@ -33,6 +34,8 @@ export class Tab1Page implements OnInit, OnDestroy {
 
   private readonly webSocketCommandGateway = inject(WebSocketCommandGateway);
   private readonly thermostatService = inject(ThermostatService);
+  private readonly deviceService = inject(DeviceService);
+  readonly deviceName = this.deviceService.name;
 
   mode: 'AUTO' | 'MANUAL' | 'OFF' = 'AUTO';
   temperature: number = 20;
