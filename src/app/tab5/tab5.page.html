@@ -5,7 +5,7 @@
     <div class="page-shell">
       <div class="toolbar">
         <div class="period-switch">
-          <button *ngFor="let period of periods" type="button"
+          <button *ngFor="let period of periods; trackBy: trackByPeriod" type="button"
                   [class.active]="selectedHours === period.hours"
                   (click)="selectPeriod(period.hours)">
             {{ period.label }}
@@ -63,15 +63,15 @@
             </div>
           </div>
           <div class="chart-layout">
-            <div class="y-axis"><span *ngFor="let tick of temperatureTicks">{{ tick.label }}</span></div>
+              <div class="y-axis"><span *ngFor="let tick of temperatureTicks; trackBy: trackByTick">{{ tick.label }}</span></div>
             <div class="svg-wrapper">
               <svg class="temperature-chart" [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" preserveAspectRatio="none">
-                <line *ngFor="let tick of temperatureTicks" class="grid-line" x1="0" [attr.y1]="tick.position" [attr.x2]="chartWidth" [attr.y2]="tick.position"></line>
-                <line *ngFor="let tick of timeTicks" class="grid-line time-grid-line" [attr.x1]="tick.position" y1="0" [attr.x2]="tick.position" [attr.y2]="chartHeight"></line>
+                <line *ngFor="let tick of temperatureTicks; trackBy: trackByTick" class="grid-line" x1="0" [attr.y1]="tick.position" [attr.x2]="chartWidth" [attr.y2]="tick.position"></line>
+                <line *ngFor="let tick of timeTicks; trackBy: trackByTick" class="grid-line time-grid-line" [attr.x1]="tick.position" y1="0" [attr.x2]="tick.position" [attr.y2]="chartHeight"></line>
                 <polyline class="target-line" [attr.points]="targetPolyline"></polyline>
                 <polyline class="temperature-line" [attr.points]="temperaturePolyline"></polyline>
               </svg>
-              <div class="x-axis"><span *ngFor="let tick of timeTicks" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
+              <div class="x-axis"><span *ngFor="let tick of timeTicks; trackBy: trackByTick" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
             </div>
           </div>
         </section>
@@ -87,11 +87,11 @@
               <svg class="relay-chart" [attr.viewBox]="'0 0 ' + chartWidth + ' ' + relayChartHeight" preserveAspectRatio="none">
                 <line class="grid-line" x1="0" y1="25" [attr.x2]="chartWidth" y2="25"></line>
                 <line class="grid-line" x1="0" [attr.y1]="relayChartHeight - 25" [attr.x2]="chartWidth" [attr.y2]="relayChartHeight - 25"></line>
-                <line *ngFor="let tick of timeTicks" class="grid-line time-grid-line" [attr.x1]="tick.position" y1="0" [attr.x2]="tick.position" [attr.y2]="relayChartHeight"></line>
+                <line *ngFor="let tick of timeTicks; trackBy: trackByTick" class="grid-line time-grid-line" [attr.x1]="tick.position" y1="0" [attr.x2]="tick.position" [attr.y2]="relayChartHeight"></line>
                 <path class="relay-area" [attr.d]="relayAreaPath"></path>
                 <path class="relay-line" [attr.d]="relayPath"></path>
               </svg>
-              <div class="x-axis"><span *ngFor="let tick of timeTicks" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
+              <div class="x-axis"><span *ngFor="let tick of timeTicks; trackBy: trackByTick" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
             </div>
           </div>
         </section>
@@ -102,21 +102,21 @@
             <div class="chart-header">
               <div><div class="chart-title">Température moyenne</div><div class="chart-subtitle">Amplitude min/max par période</div></div>
             </div>
-            <div class="chart-layout">
-              <div class="y-axis"><span *ngFor="let tick of temperatureTicks">{{ tick.label }}</span></div>
+          <div class="chart-layout">
+            <div class="y-axis"><span *ngFor="let tick of temperatureTicks; trackBy: trackByTick">{{ tick.label }}</span></div>
               <div class="svg-wrapper">
                 <svg class="temperature-chart" [attr.viewBox]="'0 0 ' + chartWidth + ' ' + chartHeight" preserveAspectRatio="none">
-                  <line *ngFor="let tick of temperatureTicks" class="grid-line" x1="0" [attr.y1]="tick.position" [attr.x2]="chartWidth" [attr.y2]="tick.position"></line>
-                  <ng-container *ngFor="let bucket of summary; let index = index">
-                    <line *ngIf="bucket.minimumTemperature !== null && bucket.maximumTemperature !== null"
-                          [attr.x1]="aggregateX(index)" [attr.x2]="aggregateX(index)"
-                          [attr.y1]="aggregateTemperatureY(bucket.maximumTemperature)" [attr.y2]="aggregateTemperatureY(bucket.minimumTemperature)"
+                  <line *ngFor="let tick of temperatureTicks; trackBy: trackByTick" class="grid-line" x1="0" [attr.y1]="tick.position" [attr.x2]="chartWidth" [attr.y2]="tick.position"></line>
+                  <ng-container *ngFor="let bar of aggregateBars; trackBy: trackByAggregateBar">
+                    <line *ngIf="bar.hasTemperatureRange"
+                          [attr.x1]="bar.x" [attr.x2]="bar.x"
+                          [attr.y1]="bar.maximumTemperatureY" [attr.y2]="bar.minimumTemperatureY"
                           stroke="#ef7857" stroke-width="5"></line>
-                    <circle *ngIf="bucket.averageTemperature !== null" [attr.cx]="aggregateX(index)"
-                            [attr.cy]="aggregateTemperatureY(bucket.averageTemperature)" r="7" fill="#ef7857"></circle>
+                    <circle *ngIf="bar.hasAverageTemperature" [attr.cx]="bar.x"
+                            [attr.cy]="bar.averageTemperatureY" r="7" fill="#ef7857"></circle>
                   </ng-container>
                 </svg>
-                <div class="x-axis"><span *ngFor="let tick of aggregateTicks" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
+                <div class="x-axis"><span *ngFor="let tick of aggregateTicks; trackBy: trackByTick" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
               </div>
             </div>
           </section>
@@ -130,11 +130,11 @@
               <div class="relay-axis"><span>100%</span><span>0%</span></div>
               <div class="svg-wrapper">
                 <svg class="relay-chart" [attr.viewBox]="'0 0 ' + chartWidth + ' ' + relayChartHeight" preserveAspectRatio="none">
-                  <rect *ngFor="let bucket of summary; let index = index" [attr.x]="aggregateX(index) - aggregateDisplayWidth / 2"
-                        [attr.y]="aggregateRelayY(bucket)" [attr.width]="aggregateDisplayWidth"
-                        [attr.height]="aggregateRelayHeight(bucket)" fill="#f09a49"></rect>
+                  <rect *ngFor="let bar of aggregateBars; trackBy: trackByAggregateBar" [attr.x]="bar.x - bar.displayWidth / 2"
+                        [attr.y]="bar.relayY" [attr.width]="bar.displayWidth"
+                        [attr.height]="bar.relayHeight" fill="#f09a49"></rect>
                 </svg>
-                <div class="x-axis"><span *ngFor="let tick of aggregateTicks" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
+                <div class="x-axis"><span *ngFor="let tick of aggregateTicks; trackBy: trackByTick" [style.left.%]="tick.position / chartWidth * 100">{{ tick.label }}</span></div>
               </div>
             </div>
           </section>

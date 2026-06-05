@@ -1,10 +1,30 @@
 import {of} from 'rxjs';
+import {TestBed} from '@angular/core/testing';
 import {DeviceTelemetryResponse} from '../core/model/application.model';
+import {TelemetryService} from '../core/service/telemetry.service';
 import {Tab5Page} from './tab5.page';
 
 describe('Tab5Page', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{
+        provide: TelemetryService,
+        useValue: {
+          getTelemetry: () => of([]),
+          getConsumption: () => of({
+            electricalPowerKw: null,
+            relayOnSeconds: 0,
+            relayActivityPercent: 0,
+            energyKwh: null,
+          }),
+          getTelemetrySummary: () => of([]),
+        },
+      }],
+    });
+  });
+
   it('builds temperature and relay charts from telemetry', () => {
-    const page = new Tab5Page({getTelemetry: () => of([])} as never);
+    const page = createPage();
     const rangeEnd = new Date('2026-05-30T20:00:00Z').getTime();
     page.selectedHours = 1;
     page.rangeEnd = rangeEnd;
@@ -22,7 +42,7 @@ describe('Tab5Page', () => {
   });
 
   it('offers useful periods without the six-hour view', () => {
-    const page = new Tab5Page({getTelemetry: () => of([])} as never);
+    const page = createPage();
 
     expect(page.periods).not.toContain({label: '6 h', hours: 6});
     expect(page.periods).toContain({label: '24 h', hours: 24});
@@ -31,7 +51,7 @@ describe('Tab5Page', () => {
   });
 
   it('shows day and time on short-period chart ticks', () => {
-    const page = new Tab5Page({getTelemetry: () => of([])} as never);
+    const page = createPage();
     page.selectedHours = 24;
     page.rangeEnd = new Date('2026-05-30T20:00:00Z').getTime();
 
@@ -40,7 +60,7 @@ describe('Tab5Page', () => {
   });
 
   it('displays consumption calculated by the backend', () => {
-    const page = new Tab5Page({getTelemetry: () => of([])} as never);
+    const page = createPage();
     page.consumption = {
       electricalPowerKw: 2.5,
       relayOnSeconds: 7200,
@@ -54,7 +74,7 @@ describe('Tab5Page', () => {
   });
 
   it('uses aggregated bars for month and year periods', () => {
-    const page = new Tab5Page({getTelemetry: () => of([])} as never);
+    const page = createPage();
     page.selectedHours = 720;
     page.summary = [{
       bucketStart: '2026-05-01T00:00:00',
@@ -81,5 +101,9 @@ describe('Tab5Page', () => {
       mode: 'AUTO',
       recordedAt: new Date(timestamp).toISOString(),
     };
+  }
+
+  function createPage(): Tab5Page {
+    return TestBed.runInInjectionContext(() => new Tab5Page());
   }
 });
